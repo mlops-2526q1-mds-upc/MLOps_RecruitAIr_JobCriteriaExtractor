@@ -16,6 +16,7 @@ dependencies = [
     "dvc>=3.63.0",
     "flake8",
     "isort",
+    "kagglehub>=0.3.13",
     "loguru",
     "numpy>=2.3.3",
     "pandas>=2.3.2",
