@@ -133,7 +133,8 @@ This dataset was initially sourced from the Kaggle dataset titled [LinkedIn Job 
 
 **APA:**
 
-<pre lang="bibtex"> ```bibtex @misc{batuhan_mutlu_2024, title={job-skill-set}, url={https://www.kaggle.com/dsv/10201355}, DOI={10.34740/KAGGLE/DSV/10201355}, publisher={Kaggle}, author={Batuhan Mutlu}, year={2024} } ``` </pre>
+Mutlu, B. (2024). job-skill-set. Kaggle. https://www.kaggle.com/dsv/10201355
+ DOI: 10.34740/KAGGLE/DSV/10201355
 
 ## Glossary [optional]
 
