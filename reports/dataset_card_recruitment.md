@@ -41,9 +41,13 @@ For this use case, the dataset will serve as a collection of example application
 <!-- This section describes suitable use cases for the dataset. -->
 
 This dataset is useful for:
+
 - Building AI-powered resume-screening models to automate candidate selection.
+
 - Developing job recommendation systems that suggest the best roles for applicants.
+
 - Analyzing hiring trends & biases in recruitment based on age, gender, or ethnicity.
+
 - Training NLP models for resume parsing and job description understanding.
 
 <!--### Out-of-Scope Use>
@@ -57,13 +61,21 @@ This dataset is useful for:
 <!-- This section provides a description of the dataset fields, and additional information about the dataset structure such as criteria used to create the splits, relationships between data points, etc. -->
 
 **Job Applicant Name:** Full name of the applicant.
+
 **Age:** Applicant’s age.
+
 **Gender:** Applicant’s gender identity.
+
 **Race:** Racial background of the applicant.
+
 **Ethnicity:** Ethnic identity of the applicant.
+
 **Resume:** Text content of the applicant’s resume, including skills, experience, and education.
+
 **Job Roles** The job positions for which the applicant applied.
+
 **Job Description:** A detailed description of the job role, including required skills, responsibilities, and qualifications.
+
 **Best Match:** A label or score indicating how well the applicant matches the job role based on qualifications and experience.
 
 ## Dataset Creation
