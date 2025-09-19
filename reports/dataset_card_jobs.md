@@ -4,11 +4,7 @@
 {{ card_data }}
 ---
 
-# Dataset Card for Recruitment
-
-<!-- Provide a quick summary of the dataset. -->
-
-{{ dataset_summary | default(This dataset contains applicant details, resumes, job descriptions, and matching labels to assess how well a candidate fits a specific job role.", true) }}
+# Dataset Card for Job Skill
 
 ## Dataset Details
 
@@ -16,44 +12,59 @@
 
 <!-- Provide a longer summary of what this dataset is. -->
 
-{{ dataset_description | default("In today’s competitive job market, companies receive numerous applications for each job posting, making it challenging to efficiently screen and shortlist candidates. This dataset is designed to facilitate research and development in resume screening, job matching, and recruitment analytics. It can be used to build machine learning models for applicant-job matching, automate resume parsing, and analyze hiring trends.
-The dataset was compiled from synthetic and publicly available job application data. It is structured to resemble real-world hiring scenarios, making it useful for data science and HR analytics projects. The resumes and job descriptions are either anonymized, synthesized, or derived from publicly accessible recruitment data.", true) }}
+The Job Skill Set Dataset is designed for use in machine learning projects related to job matching, skill extraction, and natural language processing tasks. The dataset includes detailed information about job roles, descriptions, and associated skill sets, enabling developers and researchers to build and evaluate models for career recommendation systems, resume parsing, and skill inference.
 
-- **Curated by:** {{ curators | default("Surendra Kumar Nellore", true)}}
-- **Funded by [optional]:** {{ funded_by | default("[More Information Needed]", true)}}
-- **Shared by [optional]:** {{ shared_by | default("[More Information Needed]", true)}}
-- **Language(s) (NLP):** {{ language | default("[More Information Needed]", true)}}
-- **License:** {{ license | default("[More Information Needed]", true)}}
+- **Owned by:** [Batuhan Mutlu](https://www.kaggle.com/batuhanmutlu)
+- **Language(s) (NLP):** English
+- **License:** [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ### Dataset Sources [optional]
 
 <!-- Provide the basic links for the dataset. -->
 
-- **Repository:** {{ repo | default("https://www.kaggle.com/datasets/surendra365/recruitement-dataset", true)}}
-- **Paper [optional]:** {{ paper | default("[More Information Needed]", true)}}
-- **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
+- **Repository:** https://www.kaggle.com/datasets/batuhanmutlu/job-skill-set
 
 ## Uses
 
 <!-- Address questions around how the dataset is intended to be used. -->
 
+This dataset is primarily used to sample a diverse range of job offers that serve as input during the model training and evaluation process. By including various job descriptions, roles, and requirements, the dataset helps create realistic scenarios that simulate how different types of job openings are matched with candidate applications. This enables the model to learn how to identify the most suitable applicants for each position, based on the specific demands and characteristics of each job offer.
+
 ### Direct Use
 
 <!-- This section describes suitable use cases for the dataset. -->
 
-{{ direct_use | default("[More Information Needed]", true)}}
+This dataset is particularly useful for the following applications:
+
+- Skill Extraction: Identifying and parsing skills from job descriptions.
+
+- Job-Resume Matching: Matching job descriptions with potential candidate profiles.
+
+- Recommendation Systems: Developing models that recommend jobs or training programs based on required skills.
+
+- Natural Language Processing: Experimenting with text-based models in recruitment and career analytics.
 
 ### Out-of-Scope Use
 
 <!-- This section addresses misuse, malicious use, and uses that the dataset will not work well for. -->
 
-{{ out_of_scope_use | default("[More Information Needed]", true)}}
+
 
 ## Dataset Structure
 
 <!-- This section provides a description of the dataset fields, and additional information about the dataset structure such as criteria used to create the splits, relationships between data points, etc. -->
 
-{{ dataset_structure | default("[More Information Needed]", true)}}
+The dataset contains the following features:
+
+- **job_id:** A unique identifier for each job posting.
+
+- **category:** The category of the job, such as INFORMATION-TECHNOLOGY,BUSINESS-DEVELOPMENT,FINANCE,SALES or HR.
+
+- **job_title:** The title of the job position.
+
+- **job_description:** A detailed text description of the job, including responsibilities and qualifications.
+
+- **job_skill_set:** A list of relevant skills(include hard and soft skills) associated with the job, extracted using RecAI APIs.
 
 ## Dataset Creation
 
@@ -61,17 +72,16 @@ The dataset was compiled from synthetic and publicly available job application d
 
 <!-- Motivation for the creation of this dataset. -->
 
-{{ curation_rationale_section | default("[More Information Needed]", true)}}
-
 ### Source Data
 
 <!-- This section describes the source data (e.g. news text and headlines, social media posts, translated sentences, ...). -->
+
+This dataset was initially sourced from the Kaggle dataset titled [LinkedIn Job Postings](https://www.kaggle.com/datasets/arshkon/linkedin-job-postings) by Arshkon. The original job postings data has been enhanced by extracting skill sets using [RecAI API services](https://recai.tech/en). These APIs are designed for skill parsing, resume analysis, and other recruitment-related tasks.
 
 #### Data Collection and Processing
 
 <!-- This section describes the data collection and processing process such as data selection criteria, filtering and normalization methods, tools and libraries used, etc. -->
 
-{{ data_collection_and_processing_section | default("[More Information Needed]", true)}}
 
 #### Who are the source data producers?
 
@@ -123,7 +133,7 @@ The dataset was compiled from synthetic and publicly available job application d
 
 **APA:**
 
-{{ citation_apa | default("[More Information Needed]", true)}}
+<pre lang="bibtex"> ```bibtex @misc{batuhan_mutlu_2024, title={job-skill-set}, url={https://www.kaggle.com/dsv/10201355}, DOI={10.34740/KAGGLE/DSV/10201355}, publisher={Kaggle}, author={Batuhan Mutlu}, year={2024} } ``` </pre>
 
 ## Glossary [optional]
 

@@ -1,7 +1,6 @@
 ---
 # For reference on dataset card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/datasetcard.md?plain=1
 # Doc / guide: https://huggingface.co/docs/hub/datasets-cards
-{{ card_data }}
 ---
 
 # Dataset Card for Recruitment
@@ -22,7 +21,7 @@ The dataset was compiled from synthetic and publicly available job application d
 
 - **Owned by:** Surendra Kumar Nellore
 - **Language(s) (NLP):** English
-- **License:** Database: Open Database, Contents: Database Contents
+- **License:** [Database: Open Database, Contents: Database Contents](https://opendatacommons.org/licenses/dbcl/1-0/)
 
 ### Dataset Sources [optional]
 
