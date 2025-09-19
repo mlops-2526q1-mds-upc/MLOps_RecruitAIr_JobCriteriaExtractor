@@ -4,11 +4,11 @@
 {{ card_data }}
 ---
 
-# Dataset Card for {{ pretty_name | default("Dataset Name", true) }}
+# Dataset Card for {{ pretty_name | default("Recruitment", true) }}
 
 <!-- Provide a quick summary of the dataset. -->
 
-{{ dataset_summary | default("", true) }}
+{{ dataset_summary | default(This dataset contains applicant details, resumes, job descriptions, and matching labels to assess how well a candidate fits a specific job role.", true) }}
 
 ## Dataset Details
 
@@ -16,9 +16,10 @@
 
 <!-- Provide a longer summary of what this dataset is. -->
 
-{{ dataset_description | default("", true) }}
+{{ dataset_description | default("In today’s competitive job market, companies receive numerous applications for each job posting, making it challenging to efficiently screen and shortlist candidates. This dataset is designed to facilitate research and development in resume screening, job matching, and recruitment analytics. It can be used to build machine learning models for applicant-job matching, automate resume parsing, and analyze hiring trends.
+The dataset was compiled from synthetic and publicly available job application data. It is structured to resemble real-world hiring scenarios, making it useful for data science and HR analytics projects. The resumes and job descriptions are either anonymized, synthesized, or derived from publicly accessible recruitment data.", true) }}
 
-- **Curated by:** {{ curators | default("[More Information Needed]", true)}}
+- **Curated by:** {{ curators | default("Surendra Kumar Nellore", true)}}
 - **Funded by [optional]:** {{ funded_by | default("[More Information Needed]", true)}}
 - **Shared by [optional]:** {{ shared_by | default("[More Information Needed]", true)}}
 - **Language(s) (NLP):** {{ language | default("[More Information Needed]", true)}}
@@ -28,7 +29,7 @@
 
 <!-- Provide the basic links for the dataset. -->
 
-- **Repository:** {{ repo | default("[More Information Needed]", true)}}
+- **Repository:** {{ repo | default("https://www.kaggle.com/datasets/surendra365/recruitement-dataset", true)}}
 - **Paper [optional]:** {{ paper | default("[More Information Needed]", true)}}
 - **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
 
