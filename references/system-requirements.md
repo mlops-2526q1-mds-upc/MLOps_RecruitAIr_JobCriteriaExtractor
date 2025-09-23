@@ -28,9 +28,15 @@ RecruitAIr is an AI-based recruitment platform that, given a job description and
 
 ## Non-Functional Requirements of the Application
 
+**General:**
+    - The system shall be accessible via a web interface with an availability of 99% over a year, excluding scheduled maintenance.
+    - The system shall ensure data integrity and consistency, with a maximum of 0.1% data corruption or loss over a year.
+    - The system shall respond to user actions (e.g., loading job offers, submitting applications, viewing rankings) within 2 seconds for 95% of requests.
+    - The system shall be scalable to handle an increasing number of job offers and applications, with the ability to support at least 10,000 concurrent users without performance degradation.
+   - The system shall ensure the security of user data, implementing measures such as encryption, secure authentication, and regular security audits to prevent unauthorized access and data breaches.
+
 3. **Applicant suitability and ranking:**
     - Given a dataset with several applications and job offers, and their human-defined best match, the system shall rank the best match among the 10% top ranked applicants in at least 80% of the cases.
-
 
 ## Functional Requirements of the AI Systems
 
