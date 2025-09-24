@@ -39,7 +39,7 @@ MLOps group project for good company practices in ML
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
-└── MLOps_RecruitAIr   <- Source code for use in this project.
+└── recruitair   <- Source code for use in this project.
     │
     ├── __init__.py             <- Makes MLOps_RecruitAIr a Python module
     │
