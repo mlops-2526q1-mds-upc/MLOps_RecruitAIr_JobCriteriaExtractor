@@ -5,3 +5,11 @@ stages:
     - src/data/download_raw_dataset.py
     outs:
     - data/raw/
+  preprocess:
+    cmd: python -m src.data.preprocess
+    deps:
+    - data/raw/
+    - src/data/preprocess_json.py
+    outs:
+    - data/processed/preprocessed_resumes.json
+    - data/processed/preprocessed_resumes.parquet
