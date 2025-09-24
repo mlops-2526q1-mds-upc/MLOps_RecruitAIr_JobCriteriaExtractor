@@ -1,0 +1,89 @@
+The following text is a job offer. From it, extract all the key requirements or
+criteria that an applicant to this job offer must or should fulfill. Criteria can
+be either explicit requirements that are clearly stated in the job offer, implicit
+requirements that are not clearly stated but can be inferred from the job offer,
+desirable qualities that are not strictly required but would make an applicant
+more competitive, or any other relevant criteria that can be derived from the job offer.
+
+For each criterion, provide:
+- A title in one or two words at most.
+- A brief but exhaustive description, which will be used later for evaluation, so
+    it must be clear, precise, and unambiguous.
+- An importance rating from 1 to 5, where 1 means "it would be okay for an applicant
+    to have this criterion, but it's not bad if they don't" and 5 means "an applicant
+    must absolutely have this criterion to be considered for the job".
+
+Provide the output as a JSON object with a single field "key_criteria", which is
+a list of dictionaries, each representing a key requirement or criterion with
+the fields "title", "description", and "importance".
+
+For example, if the job offer has the following text:
+
+```
+We are looking for a Junior Machine Learning Engineer with expertise and passion
+in the Gen AI space.
+```
+
+You might extract the following key criteria:
+
+```json
+{
+    "key_criteria": [
+        {
+            "title": "GenAI Expertise",
+            "description": "Expertise and passion in the field of Generative AI.",
+            "importance": 5
+        },
+        {
+            "title": "ML Background",
+            "description": "Background in Machine Learning engineering.",
+            "importance": 3
+        }
+        ...
+    ]
+}
+```
+
+Or if the job offer has the following text:
+
+```
+BSc or MSc in Computer Science, Artificial Intelligence, Mathematics, Data Science,
+or any other related discipline or commensurate work experience or demonstrated
+competence. MSc related to Generative AI would be a plus.
+Between 0 - 3 years of work experience, internships related to the job content
+would also be valuable. Exposure to Gen AI in previous projects / internships.
+```
+
+You might extract the following key criteria:
+
+```json
+{
+    "key_criteria": [
+        {
+            "title": "Educational Background",
+            "description": "BSc or MSc in Computer Science, Artificial Intelligence, Mathematics, Data Science, or any other related discipline or commensurate work experience or demonstrated competence.",
+            "importance": 5
+        },
+        {
+            "title": "Generative AI Education",
+            "description": "MSc related to Generative AI would be a plus.",
+            "importance": 3
+        },
+        {
+            "title": "Work Experience",
+            "description": "Between 0 - 3 years of work experience, internships related to the job content would also be valuable.",
+            "importance": 4
+        },
+        {
+            "title": "Gen AI Exposure",
+            "description": "Exposure to Generative AI in previous projects / internships.",
+            "importance": 4
+        }
+        ...
+    ]
+}
+```
+
+Here's the job offer text:
+${job_offer_text}
+Provide the output as a JSON object only, without any additional text or explanation.
