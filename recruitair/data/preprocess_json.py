@@ -3,10 +3,10 @@
 Preprocess match_X.json / mismatch_X.json JSONs into Parquet + JSON files.
 
 Defaults:
- - input dir:  data/raw/raw_jsons
- - output dir: data/processed
- - output parquet: data/processed/preprocessed_resumes.parquet
- - output json:    data/processed/preprocessed_resumes.json
+ - input dir:  RAW_DATA_DIR / "raw_jsons"
+ - output dir: PROCESSED_DATA_DIR
+ - output parquet: PROCESSED_DATA_DIR / "preprocessed_resumes.parquet"
+ - output json:    PROCESSED_DATA_DIR / "preprocessed_resumes.json"
 
 Columns:
  - resume (str)
@@ -15,26 +15,23 @@ Columns:
  - match (int: 1=match, 0=mismatch)
 """
 
-import os
-import re
+import argparse
 import json
 import math
-import argparse
+import re
 import sys
+from pathlib import Path
 from typing import Optional, Tuple, List
 
 import pandas as pd
+from recruitair.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
 
 FNAME_RE = re.compile(r'^(?P<label>match|mismatch)_(?P<num>\d+)\.json$', re.IGNORECASE)
 
 
-def find_target_json_files(input_dir: str) -> List[str]:
-    matches = []
-    for root, _, files in os.walk(input_dir):
-        for fn in files:
-            if FNAME_RE.match(fn):
-                matches.append(os.path.join(root, fn))
-    return sorted(matches)
+def find_target_json_files(input_dir: Path) -> List[Path]:
+    """Find all match_X.json and mismatch_X.json files under input_dir."""
+    return sorted([p for p in input_dir.rglob("*.json") if FNAME_RE.match(p.name)])
 
 
 def extract_text(d: dict, path: List[str]) -> Optional[str]:
@@ -88,16 +85,15 @@ def compute_score(output: dict) -> Optional[float]:
     return sum(vals) / len(vals) if vals else None
 
 
-def process_file(path: str) -> Optional[Tuple[str, str, Optional[float], int]]:
-    fn = os.path.basename(path)
-    m = FNAME_RE.match(fn)
+def process_file(path: Path) -> Optional[Tuple[str, str, Optional[float], int]]:
+    m = FNAME_RE.match(path.name)
     if not m:
         return None
     label = m.group("label").lower()
     match_flag = 1 if label == "match" else 0
 
     try:
-        with open(path, "r", encoding="utf-8") as fh:
+        with path.open("r", encoding="utf-8") as fh:
             obj = json.load(fh)
     except Exception as e:
         print(f"WARNING: Failed to parse {path}: {e}", file=sys.stderr)
@@ -110,28 +106,40 @@ def process_file(path: str) -> Optional[Tuple[str, str, Optional[float], int]]:
     return (resume.strip(), job_description.strip(), score, match_flag)
 
 
-def ensure_dir(path: str):
-    os.makedirs(path, exist_ok=True)
-
-
 def main():
     p = argparse.ArgumentParser(description="Preprocess resume JSONs into Parquet + JSON")
-    p.add_argument("--input-dir", "-i", default="data/raw/raw_jsons",
-                   help="Directory containing JSON files (default: data/raw/raw_jsons)")
-    p.add_argument("--output-dir", "-d", default="data/processed",
-                   help="Directory for processed outputs (default: data/processed)")
-    p.add_argument("--output-parquet", default=None,
-                   help="Output Parquet file (default: data/processed/preprocessed_resumes.parquet)")
-    p.add_argument("--output-json", default=None,
-                   help="Output JSON file (default: data/processed/preprocessed_resumes.json)")
+    p.add_argument(
+        "--input-dir", "-i",
+        type=Path,
+        default=RAW_DATA_DIR / "raw_jsons",
+        help="Directory containing JSON files (default: RAW_DATA_DIR/raw_jsons)",
+    )
+    p.add_argument(
+        "--output-dir", "-d",
+        type=Path,
+        default=PROCESSED_DATA_DIR,
+        help="Directory for processed outputs (default: PROCESSED_DATA_DIR)",
+    )
+    p.add_argument(
+        "--output-parquet",
+        type=Path,
+        default=None,
+        help="Output Parquet file (default: processed/preprocessed_resumes.parquet)",
+    )
+    p.add_argument(
+        "--output-json",
+        type=Path,
+        default=None,
+        help="Output JSON file (default: processed/preprocessed_resumes.json)",
+    )
     args = p.parse_args()
 
-    input_dir = args.input_dir
-    output_dir = args.output_dir
-    out_parquet = args.output_parquet or os.path.join(output_dir, "preprocessed_resumes.parquet")
-    out_json = args.output_json or os.path.join(output_dir, "preprocessed_resumes.json")
+    input_dir: Path = args.input_dir
+    output_dir: Path = args.output_dir
+    out_parquet: Path = args.output_parquet or (output_dir / "preprocessed_resumes.parquet")
+    out_json: Path = args.output_json or (output_dir / "preprocessed_resumes.json")
 
-    if not os.path.isdir(input_dir):
+    if not input_dir.exists():
         print(f"ERROR: input directory does not exist: {input_dir}", file=sys.stderr)
         sys.exit(2)
 
@@ -152,7 +160,7 @@ def main():
 
     df = pd.DataFrame(rows, columns=["resume", "job_description", "score", "match"])
 
-    ensure_dir(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
     df.to_parquet(out_parquet, index=False)
     df.to_json(out_json, orient="records", lines=False, force_ascii=False, indent=2)
 
