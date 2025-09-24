@@ -4,9 +4,9 @@ Preprocess match_X.json / mismatch_X.json JSONs into Parquet + JSON files.
 
 Defaults:
  - input dir:  RAW_DATA_DIR / "raw_jsons"
- - output dir: PROCESSED_DATA_DIR
- - output parquet: PROCESSED_DATA_DIR / "preprocessed_resumes.parquet"
- - output json:    PROCESSED_DATA_DIR / "preprocessed_resumes.json"
+ - output dir: INTERIM_DATA_DIR
+ - output parquet: INTERIM_DATA_DIR / "preprocessed_resumes.parquet"
+ - output json:    INTERIM_DATA_DIR / "preprocessed_resumes.json"
 
 Columns:
  - resume (str)
@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Optional, Tuple, List
 
 import pandas as pd
-from recruitair.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
+from recruitair.config import RAW_DATA_DIR, INTERIM_DATA_DIR
 
 FNAME_RE = re.compile(r'^(?P<label>match|mismatch)_(?P<num>\d+)\.json$', re.IGNORECASE)
 
@@ -117,20 +117,20 @@ def main():
     p.add_argument(
         "--output-dir", "-d",
         type=Path,
-        default=PROCESSED_DATA_DIR,
-        help="Directory for processed outputs (default: PROCESSED_DATA_DIR)",
+        default=INTERIM_DATA_DIR,
+        help="Directory for processed outputs (default: INTERIM_DATA_DIR)",
     )
     p.add_argument(
         "--output-parquet",
         type=Path,
         default=None,
-        help="Output Parquet file (default: processed/preprocessed_resumes.parquet)",
+        help="Output Parquet file (default: INTERIM_DATA_DIR/preprocessed_resumes.parquet)",
     )
     p.add_argument(
         "--output-json",
         type=Path,
         default=None,
-        help="Output JSON file (default: processed/preprocessed_resumes.json)",
+        help="Output JSON file (default: INTERIM_DATA_DIR/preprocessed_resumes.json)",
     )
     args = p.parse_args()
 

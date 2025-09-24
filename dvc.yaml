@@ -1,15 +1,21 @@
 stages:
   download:
-    cmd: python -m src.data.download_raw_dataset
+    cmd: python -m recruitair.data.download_raw_dataset
     deps:
     - src/data/download_raw_dataset.py
     outs:
     - data/raw/
   preprocess:
-    cmd: python -m src.data.preprocess
+    cmd: python -m recruitair.data.preprocess_json
     deps:
     - data/raw/
     - src/data/preprocess_json.py
     outs:
-    - data/processed/preprocessed_resumes.json
-    - data/processed/preprocessed_resumes.parquet
+    - data/interim
+  split:
+    cmd: python -m src.data.split_data
+    deps:
+    - data/interim/
+    - src/data/split_data.py
+    outs:
+    - data/processed/
