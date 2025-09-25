@@ -1,37 +1,22 @@
 import os
-import string
-from typing import List
 
 from langchain_ollama import ChatOllama
-from pydantic import BaseModel, Field
+import mlflow
 
+from .models import KeyCriteriaResponse
 
-class KeyCriterion(BaseModel):
-    title: str = Field(description="The title of the key requirement or criterion in one or two words at most.")
-    description: str = Field(description="A brief but exhaustive description of the key requirement.")
-    importance: int = Field(
-        ge=1,
-        le=5,
-        description="An integer from 1 to 5 indicating the importance of "
-        "an applicant to this job offer to fulfill this key requirement.",
-    )
-
-
-class KeyCriteriaResponse(BaseModel):
-    key_criteria: List[KeyCriterion] = Field(
-        description="An exhaustive list of all the key requirements or criteria that are explicit or implicit in the job offer."
-    )
-
-
-with open(os.path.join(os.path.dirname(__file__), "prompts", "extract_criteria.txt")) as f:
-    PROMPT_TEMPLATE = string.Template(f.read())
+PROMPT_VERSION = os.getenv("CRITERIA_EXTRACTION_PROMPT_VERSION", "1")
+if not PROMPT_VERSION.isdigit():
+    raise ValueError("CRITERIA_EXTRACTION_PROMPT_VERSION must be a digit or not set")
+PROMPT_VERSION = int(PROMPT_VERSION)
+prompt_template = mlflow.genai.load_prompt("job-offer-criteria-extraction", version=PROMPT_VERSION)
 
 
 def extract_key_criteria_from_job_offer(job_offer_text: str) -> KeyCriteriaResponse:
     llm = ChatOllama(model="dolphin3", temperature=0)
-    prompt = PROMPT_TEMPLATE.substitute(job_offer_text=job_offer_text)
-    response = llm.with_structured_output(KeyCriteriaResponse, method="json_schema").invoke(prompt)
-    return response
+    prompt = prompt_template.format(job_offer_text=job_offer_text)
+    response = llm.with_structured_output(prompt_template.response_format, method="json_schema").invoke(prompt)
+    return KeyCriteriaResponse.model_validate(response)
 
 
 if __name__ == "__main__":
