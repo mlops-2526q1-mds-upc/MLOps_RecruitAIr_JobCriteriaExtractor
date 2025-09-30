@@ -4,7 +4,7 @@ import os
 import shutil
 from huggingface_hub import list_repo_files, hf_hub_download
 from typing import Optional
-from recruitair.config import RAW_DATA_DIR
+from recruitair.config.data_download_config import RAW_DATA_DIR, HF_RESUME_SCORE_DETAILS_REPO, HF_RESUME_SCORE_DETAILS_REVISION
 
 def download_kaggle_dataset():
     """
@@ -28,15 +28,15 @@ def download_kaggle_dataset():
     df_job_skill_set.to_csv(skill_set_file)
     df_recruitment.to_csv(recruitment_file)
 
-def download_huggingface_dataset_jsons(repo_id: str,
-                              raw_data_dir: str,
-                              target_subdir: Optional[str] = None,
-                              revision: str = "main"):
+def download_huggingface_dataset_jsons(
+    repo_id: str,
+    raw_data_dir: str,
+    target_subdir: Optional[str] = None,
+    revision: str = "main"
+):
     """
     Download all .json files from a HF dataset repo (repo_type='dataset') and copy them
-    into raw_data_dir/target_subdir (creates if needed).
-
-    repo_id example: "netsol/resume-score-details"
+    into raw_data_dir/target_subdir (creates if needed), also save the commit SHA1.
     """
     # destination directory
     dataset_name = (target_subdir or repo_id.split("/")[-1])
@@ -55,15 +55,16 @@ def download_huggingface_dataset_jsons(repo_id: str,
         print("No JSON files found in the dataset repo.")
         return
 
-    print(f"Found {len(json_paths)} json files. Downloading...")
+    print(f"Found {len(json_paths)} JSON files. Downloading...")
     downloaded = 0
     for rel_path in sorted(json_paths):
         try:
-            # hf_hub_download returns the local cached path
-            local_path = hf_hub_download(repo_id=repo_id,
-                                         filename=rel_path,
-                                         repo_type="dataset",
-                                         revision=revision)
+            local_path = hf_hub_download(
+                repo_id=repo_id,
+                filename=rel_path,
+                repo_type="dataset",
+                revision=revision
+            )
         except Exception as e:
             print(f"  - ERROR downloading {rel_path}: {e}")
             continue
@@ -80,9 +81,20 @@ def download_huggingface_dataset_jsons(repo_id: str,
         except Exception as e:
             print(f"  - ERROR copying {local_path} -> {target_path}: {e}")
 
+    # Save SHA1
+    sha1_path = os.path.join(dest_dir, "sha1.txt")
+    with open(sha1_path, "w") as f:
+        f.write(revision)
+    print(f"SHA1 saved to {sha1_path}")
+
     print(f"Done. {downloaded}/{len(json_paths)} JSON files saved to: {dest_dir}")
 
 
 if __name__ == "__main__":
     download_kaggle_dataset()
-    download_huggingface_dataset_jsons("netsol/resume-score-details", RAW_DATA_DIR, target_subdir="raw_jsons")
+    download_huggingface_dataset_jsons(
+        repo_id=HF_RESUME_SCORE_DETAILS_REPO,
+        raw_data_dir=RAW_DATA_DIR,
+        target_subdir="raw_jsons",
+        revision=HF_RESUME_SCORE_DETAILS_REVISION
+    )

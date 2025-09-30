@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-
-from recruitair.config import INTERIM_DATA_DIR, PROCESSED_DATA_DIR, SEED, TRAIN_SPLIT, VALIDATION_SPLIT
+from recruitair.config.data_preprocess_config import INTERIM_DATA_DIR, PROCESSED_DATA_DIR
+from recruitair.config.data_split_config import SEED, TRAIN_SPLIT, VALIDATION_SPLIT
 
 
 def split_data():
