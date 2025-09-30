@@ -13,7 +13,6 @@ stages:
     deps:
     - data/raw/raw_jsons/
     - recruitair/data/preprocess_json.py
-    - recruitair/config/data_download_config.py
     - recruitair/config/data_preprocess_config.py
     outs:
     - data/interim/preprocessed_jobs.jsonl

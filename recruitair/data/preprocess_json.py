@@ -22,8 +22,7 @@ import re
 import sys
 from pathlib import Path
 from typing import List, Optional
-from recruitair.config.data_download_config import RAW_DATA_DIR
-from recruitair.config.data_preprocess_config import INTERIM_DATA_DIR
+from recruitair.config.data_preprocess_config import RAW_DATA_DIR, INTERIM_DATA_DIR
 
 FNAME_RE = re.compile(r'^(?P<label>match|mismatch)_(?P<num>\d+)\.json$', re.IGNORECASE)
 
