@@ -1,0 +1,76 @@
+schema: '2.0'
+stages:
+  download_hugging_kaggle:
+    cmd: python -m recruitair.data.download_raw_dataset
+    deps:
+    - path: recruitair/config.py
+      hash: md5
+      md5: 2d1880b82824b89214c8044ace985547
+      size: 922
+    - path: recruitair/data/download_raw_dataset.py
+      hash: md5
+      md5: c699db92e627229a6b07bf23650ec047
+      size: 3299
+    outs:
+    - path: data/raw/job-skill-set.csv
+      hash: md5
+      md5: 91aae8929ba2216f5f7df451583e5b7c
+      size: 4910232
+    - path: data/raw/raw_jsons/
+      hash: md5
+      md5: 44b275e2715251fcceb1e0ee549e9c79.dir
+      size: 13682572
+      nfiles: 1031
+    - path: data/raw/recruitment.csv
+      hash: md5
+      md5: 5e02647bac4970269470190ad4978148
+      size: 10156046
+  preprocess_json:
+    cmd: python -m recruitair.data.preprocess_json
+    deps:
+    - path: data/raw/raw_jsons/
+      hash: md5
+      md5: 44b275e2715251fcceb1e0ee549e9c79.dir
+      size: 13682572
+      nfiles: 1031
+    - path: recruitair/config.py
+      hash: md5
+      md5: 2d1880b82824b89214c8044ace985547
+      size: 922
+    - path: recruitair/data/preprocess_json.py
+      hash: md5
+      md5: b7169dc291d1fd7b4bea8a3ac25be28b
+      size: 3252
+    outs:
+    - path: data/interim/preprocessed_jobs.jsonl
+      hash: md5
+      md5: 22206e404ab437b0636b82def69e0055
+      size: 1701131
+  split_data:
+    cmd: python -m recruitair.data.split_data
+    deps:
+    - path: data/interim/preprocessed_jobs.jsonl
+      hash: md5
+      md5: 22206e404ab437b0636b82def69e0055
+      size: 1701131
+    - path: recruitair/config.py
+      hash: md5
+      md5: 2d1880b82824b89214c8044ace985547
+      size: 922
+    - path: recruitair/data/split_data.py
+      hash: md5
+      md5: 4e2517aa782c815b3f46dd4b7f0ac4ec
+      size: 1880
+    outs:
+    - path: data/processed/test.jsonl
+      hash: md5
+      md5: 72aebda07c3fd5fea393f5e4eadb2f29
+      size: 169504
+    - path: data/processed/train.jsonl
+      hash: md5
+      md5: e209cfc2f9b8db4a15243c409bc6245e
+      size: 1174667
+    - path: data/processed/validation.jsonl
+      hash: md5
+      md5: 42238616b845017b1c82ff5a146370bd
+      size: 336961

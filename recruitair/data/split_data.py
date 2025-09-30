@@ -3,14 +3,19 @@ from sklearn.model_selection import train_test_split
 
 from recruitair.config import INTERIM_DATA_DIR, PROCESSED_DATA_DIR, SEED, TRAIN_SPLIT, VALIDATION_SPLIT
 
+
 def split_data():
     """
     Split the cleaned data into train, validation, and test sets and save them to the 'data/processed' directory.
 
-    The split is done in the ratio of TRAIN_SPLIT, VALIDATION_SPLIT, and the remainder as test.
-    The random seed is set to ensure reproducibility.
+    Input: INTERIM_DATA_DIR / "preprocessed_jobs.jsonl"
+    Output: JSONL files in PROCESSED_DATA_DIR:
+        - train.jsonl
+        - validation.jsonl
+        - test.jsonl
     """
-    df = pd.read_parquet(INTERIM_DATA_DIR / "preprocessed_resumes.parquet")
+    # Leer el JSON (si es JSONL usar lines=True, si es JSON normal quitar lines=True)
+    df = pd.read_json(INTERIM_DATA_DIR / "preprocessed_jobs.jsonl", lines=True)
 
     # First split into train and remaining
     train_df, remaining_df = train_test_split(
@@ -29,10 +34,16 @@ def split_data():
         shuffle=True
     )
 
-    # Save to Parquet
-    train_df.to_parquet(PROCESSED_DATA_DIR / "train.parquet", index=False)
-    validation_df.to_parquet(PROCESSED_DATA_DIR / "validation.parquet", index=False)
-    test_df.to_parquet(PROCESSED_DATA_DIR / "test.parquet", index=False)
+    # Save to JSONL
+    train_df.to_json(PROCESSED_DATA_DIR / "train.jsonl", orient="records", lines=True, force_ascii=False)
+    validation_df.to_json(PROCESSED_DATA_DIR / "validation.jsonl", orient="records", lines=True, force_ascii=False)
+    test_df.to_json(PROCESSED_DATA_DIR / "test.jsonl", orient="records", lines=True, force_ascii=False)
+
+    print("✅ Split completed:")
+    print(f" - Train: {len(train_df)} rows -> {PROCESSED_DATA_DIR / 'train.jsonl'}")
+    print(f" - Validation: {len(validation_df)} rows -> {PROCESSED_DATA_DIR / 'validation.jsonl'}")
+    print(f" - Test: {len(test_df)} rows -> {PROCESSED_DATA_DIR / 'test.jsonl'}")
+
 
 if __name__ == "__main__":
     split_data()

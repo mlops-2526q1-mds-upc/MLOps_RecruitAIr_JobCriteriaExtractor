@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 """
-Preprocess match_X.json / mismatch_X.json JSONs into Parquet + JSON files.
+Preprocess job JSONs into JSONL with job_description + criteria list.
 
-Defaults:
- - input dir:  RAW_DATA_DIR / "raw_jsons"
- - output dir: INTERIM_DATA_DIR
- - output parquet: INTERIM_DATA_DIR / "preprocessed_resumes.parquet"
- - output json:    INTERIM_DATA_DIR / "preprocessed_resumes.json"
-
-Columns:
- - resume (str)
- - job_description (str)
- - score (float, may be NaN)
- - match (int: 1=match, 0=mismatch)
+Input:
+ - JSON files (ej: match_X.json / mismatch_X.json)
+Output:
+ - JSONL file, each line:
+    {
+      "job_description": "...",
+      "criteria": [
+        {"name": "leadership", "importance": 35},
+        {"name": "experience", "importance": 15},
+        ...
+      ]
+    }
 """
 
 import argparse
 import json
-import math
 import re
 import sys
 from pathlib import Path
-from typing import Optional, Tuple, List
+from typing import List, Optional
 
-import pandas as pd
 from recruitair.config import RAW_DATA_DIR, INTERIM_DATA_DIR
 
 FNAME_RE = re.compile(r'^(?P<label>match|mismatch)_(?P<num>\d+)\.json$', re.IGNORECASE)
@@ -34,64 +33,8 @@ def find_target_json_files(input_dir: Path) -> List[Path]:
     return sorted([p for p in input_dir.rglob("*.json") if FNAME_RE.match(p.name)])
 
 
-def extract_text(d: dict, path: List[str]) -> Optional[str]:
-    cur = d
-    for p in path:
-        if not isinstance(cur, dict) or p not in cur:
-            return None
-        cur = cur[p]
-    return cur
-
-
-def compute_score_from_aggregated(agg: dict) -> Optional[float]:
-    if not isinstance(agg, dict):
-        return None
-    macro = agg.get("macro_scores")
-    micro = agg.get("micro_scores")
-    vals = []
-    if isinstance(macro, (int, float)):
-        vals.append(float(macro))
-    if isinstance(micro, (int, float)):
-        vals.append(float(micro))
-    return sum(vals) / len(vals) if vals else None
-
-
-def avg_of_scores_list(scores_list) -> Optional[float]:
-    if not isinstance(scores_list, list) or not scores_list:
-        return None
-    vals = []
-    for el in scores_list:
-        if isinstance(el, dict) and "score" in el:
-            try:
-                v = float(el["score"])
-                if math.isfinite(v):
-                    vals.append(v)
-            except Exception:
-                continue
-    return sum(vals) / len(vals) if vals else None
-
-
-def compute_score(output: dict) -> Optional[float]:
-    if not isinstance(output, dict):
-        return None
-    scores = output.get("scores") or {}
-    agg = scores.get("aggregated_scores")
-    s = compute_score_from_aggregated(agg)
-    if s is not None:
-        return s
-    macro_avg = avg_of_scores_list(scores.get("macro_scores"))
-    micro_avg = avg_of_scores_list(scores.get("micro_scores"))
-    vals = [v for v in (macro_avg, micro_avg) if v is not None]
-    return sum(vals) / len(vals) if vals else None
-
-
-def process_file(path: Path) -> Optional[Tuple[str, str, Optional[float], int]]:
-    m = FNAME_RE.match(path.name)
-    if not m:
-        return None
-    label = m.group("label").lower()
-    match_flag = 1 if label == "match" else 0
-
+def process_file(path: Path) -> Optional[dict]:
+    """Load JSON and extract job_description + criteria as list of dicts."""
     try:
         with path.open("r", encoding="utf-8") as fh:
             obj = json.load(fh)
@@ -99,15 +42,24 @@ def process_file(path: Path) -> Optional[Tuple[str, str, Optional[float], int]]:
         print(f"WARNING: Failed to parse {path}: {e}", file=sys.stderr)
         return None
 
-    resume = extract_text(obj, ["input", "resume"]) or ""
-    job_description = extract_text(obj, ["input", "job_description"]) or ""
-    score = compute_score(obj.get("output"))
+    inp = obj.get("input", {})
+    job_description = inp.get("job_description", "").strip()
 
-    return (resume.strip(), job_description.strip(), score, match_flag)
+    macro_dict = inp.get("macro_dict", {}) or {}
+    micro_dict = inp.get("micro_dict", {}) or {}
+
+    criteria = []
+    for name, importance in {**macro_dict, **micro_dict}.items():
+        criteria.append({"name": name, "importance": importance})
+
+    return {
+        "job_description": job_description,
+        "criteria": criteria,
+    }
 
 
 def main():
-    p = argparse.ArgumentParser(description="Preprocess resume JSONs into Parquet + JSON")
+    p = argparse.ArgumentParser(description="Preprocess jobs JSONs into JSONL")
     p.add_argument(
         "--input-dir", "-i",
         type=Path,
@@ -115,29 +67,15 @@ def main():
         help="Directory containing JSON files (default: RAW_DATA_DIR/raw_jsons)",
     )
     p.add_argument(
-        "--output-dir", "-d",
+        "--output-jsonl",
         type=Path,
-        default=INTERIM_DATA_DIR,
-        help="Directory for processed outputs (default: INTERIM_DATA_DIR)",
-    )
-    p.add_argument(
-        "--output-parquet",
-        type=Path,
-        default=None,
-        help="Output Parquet file (default: INTERIM_DATA_DIR/preprocessed_resumes.parquet)",
-    )
-    p.add_argument(
-        "--output-json",
-        type=Path,
-        default=None,
-        help="Output JSON file (default: INTERIM_DATA_DIR/preprocessed_resumes.json)",
+        default=INTERIM_DATA_DIR / "preprocessed_jobs.jsonl",
+        help="Output JSONL file (default: INTERIM_DATA_DIR/preprocessed_jobs.jsonl)",
     )
     args = p.parse_args()
 
     input_dir: Path = args.input_dir
-    output_dir: Path = args.output_dir
-    out_parquet: Path = args.output_parquet or (output_dir / "preprocessed_resumes.parquet")
-    out_json: Path = args.output_json or (output_dir / "preprocessed_resumes.json")
+    out_jsonl: Path = args.output_jsonl
 
     if not input_dir.exists():
         print(f"ERROR: input directory does not exist: {input_dir}", file=sys.stderr)
@@ -150,23 +88,16 @@ def main():
 
     print(f"Found {len(files)} JSON files. Processing...")
 
-    rows = []
-    for idx, fp in enumerate(files, start=1):
-        res = process_file(fp)
-        if res is not None:
-            rows.append(res)
-        if idx % 100 == 0 or idx == len(files):
-            print(f"Progress: {idx}/{len(files)} processed.")
+    out_jsonl.parent.mkdir(parents=True, exist_ok=True)
+    with out_jsonl.open("w", encoding="utf-8") as out_f:
+        for idx, fp in enumerate(files, start=1):
+            res = process_file(fp)
+            if res:
+                out_f.write(json.dumps(res, ensure_ascii=False) + "\n")
+            if idx % 100 == 0 or idx == len(files):
+                print(f"Progress: {idx}/{len(files)} processed.")
 
-    df = pd.DataFrame(rows, columns=["resume", "job_description", "score", "match"])
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(out_parquet, index=False)
-    df.to_json(out_json, orient="records", lines=False, force_ascii=False, indent=2)
-
-    print(f"✅ Done. {len(df)} rows written to:")
-    print(f" - Parquet: {out_parquet}")
-    print(f" - JSON:    {out_json}")
+    print(f"✅ Done. JSONL written to: {out_jsonl}")
 
 
 if __name__ == "__main__":
