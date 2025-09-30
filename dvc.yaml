@@ -16,13 +16,3 @@ stages:
     - recruitair/config.py
     outs:
     - data/interim/preprocessed_jobs.jsonl
-  split_data:
-    cmd: python -m recruitair.data.split_data
-    deps:
-    - data/interim/preprocessed_jobs.jsonl
-    - recruitair/data/split_data.py
-    - recruitair/config.py
-    outs:
-    - data/processed/test.jsonl
-    - data/processed/train.jsonl
-    - data/processed/validation.jsonl
