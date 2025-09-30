@@ -3,14 +3,14 @@ stages:
   download_hugging_kaggle:
     cmd: python -m recruitair.data.download_raw_dataset
     deps:
-    - path: recruitair/config.py
+    - path: recruitair/config/data_download_config.py
       hash: md5
-      md5: 2d1880b82824b89214c8044ace985547
-      size: 922
+      md5: 580a1c4135fbeda3861f4030eba230d2
+      size: 308
     - path: recruitair/data/download_raw_dataset.py
       hash: md5
-      md5: c699db92e627229a6b07bf23650ec047
-      size: 3299
+      md5: ced114456f99452af04a6a5db92dc57c
+      size: 3467
     outs:
     - path: data/raw/job-skill-set.csv
       hash: md5
@@ -18,9 +18,9 @@ stages:
       size: 4910232
     - path: data/raw/raw_jsons/
       hash: md5
-      md5: 44b275e2715251fcceb1e0ee549e9c79.dir
-      size: 13682572
-      nfiles: 1031
+      md5: d93d60248b2ec8721ebe15a333535407.dir
+      size: 13682579
+      nfiles: 1032
     - path: data/raw/recruitment.csv
       hash: md5
       md5: 5e02647bac4970269470190ad4978148
@@ -30,17 +30,21 @@ stages:
     deps:
     - path: data/raw/raw_jsons/
       hash: md5
-      md5: 44b275e2715251fcceb1e0ee549e9c79.dir
-      size: 13682572
-      nfiles: 1031
-    - path: recruitair/config.py
+      md5: d93d60248b2ec8721ebe15a333535407.dir
+      size: 13682579
+      nfiles: 1032
+    - path: recruitair/config/data_download_config.py
       hash: md5
-      md5: 2d1880b82824b89214c8044ace985547
-      size: 922
+      md5: 580a1c4135fbeda3861f4030eba230d2
+      size: 308
+    - path: recruitair/config/data_preprocess_config.py
+      hash: md5
+      md5: 1f338deee452391e18a32a1df5d97d70
+      size: 180
     - path: recruitair/data/preprocess_json.py
       hash: md5
-      md5: b7169dc291d1fd7b4bea8a3ac25be28b
-      size: 3252
+      md5: 7e680793d4a0d6668c338c15fd5439cf
+      size: 3324
     outs:
     - path: data/interim/preprocessed_jobs.jsonl
       hash: md5
