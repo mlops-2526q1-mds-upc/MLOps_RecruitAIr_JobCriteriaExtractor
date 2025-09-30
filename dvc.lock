@@ -33,18 +33,14 @@ stages:
       md5: d93d60248b2ec8721ebe15a333535407.dir
       size: 13682579
       nfiles: 1032
-    - path: recruitair/config/data_download_config.py
-      hash: md5
-      md5: 580a1c4135fbeda3861f4030eba230d2
-      size: 308
     - path: recruitair/config/data_preprocess_config.py
       hash: md5
-      md5: 1f338deee452391e18a32a1df5d97d70
-      size: 180
+      md5: ad35dcc4f9d07cea3d4679fc8e3cd16d
+      size: 213
     - path: recruitair/data/preprocess_json.py
       hash: md5
-      md5: 7e680793d4a0d6668c338c15fd5439cf
-      size: 3324
+      md5: 3850084b6f9854834f431b0ae186fab3
+      size: 3273
     outs:
     - path: data/interim/preprocessed_jobs.jsonl
       hash: md5
