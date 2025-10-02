@@ -4,35 +4,28 @@
 {{ card_data }}
 ---
 
-# Model Card for RecruitAIr
-
-<!-- Provide a quick summary of what the model is/does. -->
-
-Our goal is to build an AI-powered applicant tracking system that empowers recruiters to smartly sift through hundreds of applicants in minutes. Examples of tools would be ranking applicants by affinity to the job offer or filtering based on criteria specified by the recruiter in natural language.
+# Model Card for RecruitAIr_JobCriteriaExtractor
+The model extracts from a job offer the relevant skills, experiences, and other applicant requirements that recruiters are seeking. It transforms unstructured job descriptions into structured, machine-readable criteria that can be used to assess applicant suitability.
 
 ## Model Details
 
 ### Model Description
 
-<!-- Provide a longer summary of what this model is. -->
+RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model designed to process job descriptions and extract structured job criteria. It identifies required skills, preferred skills, experience levels, and other relevant attributes. Each extracted criterion is represented with:
+ -   A title (e.g., "Python Programming"),
+ -   A weight (importance for the role), and
+ -   A description (a recruiter-friendly explanation of the requirement).
 
-{{ model_description | default("", true) }}
+- **Developed by:** Alfonso Brown (github: abrownglez (https://github.com/abrowng)), Tania González (github: taaniagonzaalez (https://github.com/taaniagonzaalez)), Virginia Nicosia (github: viiirgi(https://github.com/viiiiirgi)), Marc Parcerisa (github: AimboParce (https://github.com/AimbotParce)), Daniel Reverter (github: danirc2 (https://github.com/danirc2))
+- **Funded by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Shared by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Model type:** Machine Learning
+- **Language(s) (NLP):** English
+- **License:** apache-2.0
 
-- **Developed by:** {{ developers | default("[More Information Needed]", true)}}
-- **Funded by [optional]:** {{ funded_by | default("[More Information Needed]", true)}}
-- **Shared by [optional]:** {{ shared_by | default("[More Information Needed]", true)}}
-- **Model type:** {{ model_type | default("[More Information Needed]", true)}}
-- **Language(s) (NLP):** {{ language | default("[More Information Needed]", true)}}
-- **License:** {{ license | default("[More Information Needed]", true)}}
-- **Finetuned from model [optional]:** {{ base_model | default("[More Information Needed]", true)}}
+### Model Sources
 
-### Model Sources [optional]
-
-<!-- Provide the basic links for the model. -->
-
-- **Repository:** {{ repo | default("[More Information Needed]", true)}}
-- **Paper [optional]:** {{ paper | default("[More Information Needed]", true)}}
-- **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
+- **Repository:** git@github.com:mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor.git
 
 ## Uses
 
@@ -40,33 +33,32 @@ Our goal is to build an AI-powered applicant tracking system that empowers recru
 
 ### Direct Use
 
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
-
-{{ direct_use | default("[More Information Needed]", true)}}
+-   Extracting structured job criteria from free-text job descriptions.
+-   Preprocessing for automated recruitment pipelines.
+-   Providing recruiters with a clear breakdown of job requirements.
 
 ### Downstream Use [optional]
 
-<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
-
-{{ downstream_use | default("[More Information Needed]", true)}}
+-   Feeding structured criteria into RecruitAIr_CriteriaEvaluator to match and rank applicants.
+-   Supporting explainable AI in recruitment by displaying transparent criteria-to-score mappings.
+-   Enabling recruiters to refine weights or edit extracted criteria.
 
 ### Out-of-Scope Use
 
-<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
-
-{{ out_of_scope_use | default("[More Information Needed]", true)}}
+-   Using the model as a fully automated hiring decision-maker since it is not intended to replace human judgment.
+-   Applying it to non-English job descriptions since the model is currently trained only on English.
+-   Extracting sensitive personal or demographic attributes since the model is not designed for this and could introduce bias.
 
 ## Bias, Risks, and Limitations
 
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-{{ bias_risks_limitations | default("[More Information Needed]", true)}}
+-   Bias in Job Descriptions: if job postings are written with biased or exclusionary language, the model may replicate these biases in the extracted criteria.
+-   Domain Limitations: performance may degrade in highly specialized domains (e.g., legal, medical, or academic job postings) where terminology differs from standard datasets.
+-   False Negatives/Positives: the model may miss some relevant criteria (false negatives) or extract irrelevant phrases (false positives).
+-   Weight Assignment: while the AI assigns weights, recruiters must review them to ensure they align with human judgment.
 
 ### Recommendations
 
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
-
-{{ bias_recommendations | default("Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.", true)}}
+Users should always review extracted criteria before applying them in candidate evaluations and the recruiters should adjust criterion weights when necessary to reflect actual job priorities and mitigate bias.
 
 ## How to Get Started with the Model
 
