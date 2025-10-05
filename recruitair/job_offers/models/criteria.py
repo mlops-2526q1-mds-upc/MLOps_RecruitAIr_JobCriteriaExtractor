@@ -6,9 +6,9 @@ from pydantic import BaseModel, Field
 class KeyCriterion(BaseModel):
     name: str = Field(description="The brief description of the key requirement or criterion in a few words.")
     importance: int = Field(
-        ge=1,
-        le=5,
-        description="An integer from 1 to 5 indicating the importance of "
+        ge=0,
+        le=100,
+        description="An integer from 0 to 100 indicating the importance of "
         "an applicant to this job offer to fulfill this key requirement.",
     )
 
