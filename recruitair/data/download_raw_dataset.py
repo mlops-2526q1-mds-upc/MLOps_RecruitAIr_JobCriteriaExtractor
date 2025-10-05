@@ -1,10 +1,17 @@
-import kagglehub
-from kagglehub import KaggleDatasetAdapter
 import os
 import shutil
-from huggingface_hub import list_repo_files, hf_hub_download
 from typing import Optional
-from recruitair.config.data_download_config import RAW_DATA_DIR, HF_RESUME_SCORE_DETAILS_REPO, HF_RESUME_SCORE_DETAILS_REVISION
+
+from huggingface_hub import hf_hub_download, list_repo_files
+import kagglehub
+from kagglehub import KaggleDatasetAdapter
+
+from recruitair.config.data_download_config import (
+    HF_RESUME_SCORE_DETAILS_REPO,
+    HF_RESUME_SCORE_DETAILS_REVISION,
+    RAW_DATA_DIR,
+)
+
 
 def download_kaggle_dataset():
     """
@@ -25,21 +32,21 @@ def download_kaggle_dataset():
         "job_applicant_dataset.csv",
     )
 
+    os.makedirs(RAW_DATA_DIR, exist_ok=True)
+
     df_job_skill_set.to_csv(skill_set_file)
     df_recruitment.to_csv(recruitment_file)
 
+
 def download_huggingface_dataset_jsons(
-    repo_id: str,
-    raw_data_dir: str,
-    target_subdir: Optional[str] = None,
-    revision: str = "main"
+    repo_id: str, raw_data_dir: str, target_subdir: Optional[str] = None, revision: str = "main"
 ):
     """
     Download all .json files from a HF dataset repo (repo_type='dataset') and copy them
     into raw_data_dir/target_subdir (creates if needed), also save the commit SHA1.
     """
     # destination directory
-    dataset_name = (target_subdir or repo_id.split("/")[-1])
+    dataset_name = target_subdir or repo_id.split("/")[-1]
     dest_dir = os.path.join(raw_data_dir, dataset_name)
     os.makedirs(dest_dir, exist_ok=True)
 
@@ -59,12 +66,7 @@ def download_huggingface_dataset_jsons(
     downloaded = 0
     for rel_path in sorted(json_paths):
         try:
-            local_path = hf_hub_download(
-                repo_id=repo_id,
-                filename=rel_path,
-                repo_type="dataset",
-                revision=revision
-            )
+            local_path = hf_hub_download(repo_id=repo_id, filename=rel_path, repo_type="dataset", revision=revision)
         except Exception as e:
             print(f"  - ERROR downloading {rel_path}: {e}")
             continue
@@ -96,5 +98,5 @@ if __name__ == "__main__":
         repo_id=HF_RESUME_SCORE_DETAILS_REPO,
         raw_data_dir=RAW_DATA_DIR,
         target_subdir="raw_jsons",
-        revision=HF_RESUME_SCORE_DETAILS_REVISION
+        revision=HF_RESUME_SCORE_DETAILS_REVISION,
     )

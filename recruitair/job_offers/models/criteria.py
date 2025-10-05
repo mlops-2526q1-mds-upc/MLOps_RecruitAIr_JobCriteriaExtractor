@@ -4,8 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class KeyCriterion(BaseModel):
-    title: str = Field(description="The title of the key requirement or criterion in one or two words at most.")
-    description: str = Field(description="A brief but exhaustive description of the key requirement.")
+    name: str = Field(description="The brief description of the key requirement or criterion in a few words.")
     importance: int = Field(
         ge=1,
         le=5,
