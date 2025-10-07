@@ -28,34 +28,12 @@ RecruitAIr is an AI-based recruitment platform that, given a job description and
 
 ## Non-Functional Requirements of the Application
 
-**General:**
+1. **General:**
     - The system shall be accessible via a web interface with an availability of 99% over a year, excluding scheduled maintenance.
     - The system shall ensure data integrity and consistency, with a maximum of 0.1% data corruption or loss over a year.
     - The system shall respond to user actions (e.g., loading job offers, submitting applications, viewing rankings) within 2 seconds for 95% of requests.
     - The system shall be scalable to handle an increasing number of job offers and applications, with the ability to support at least 10,000 concurrent users without performance degradation.
    - The system shall ensure the security of user data, implementing measures such as encryption, secure authentication, and regular security audits to prevent unauthorized access and data breaches.
 
-3. **Applicant suitability and ranking:**
+2. **Applicant suitability and ranking:**
     - Given a dataset with several applications and job offers, and their human-defined best match, the system shall rank the best match among the 10% top ranked applicants in at least 80% of the cases.
-
-## Functional Requirements of the AI Systems
-
-1. **Job offer processing:**
-   - The AI system shall process the job offer's text to extract a list of all possible criteria, such as required skills, experience levels, and other relevant factors, and convert them into a structured format suitable for matching with applicant data.
-   - The structured format shall include a title of the criterion, a weight (importance) for the specific job offer, and a clear and understandable description of the criterion that allows further processing and cross-checking with applicant data.
-
-2. **Applicant requirement matching:**
-   - The AI system shall receive an applicant's CV and data, as well as a job requirement's description (criterion), and return a numerical score between 0 and 1 (the front-end shall convert it to 0-10 with a single decimal point) indicating how well the applicant matches that specific requirement.
-
-## Non-Functional Requirements of the AI Systems
-
-1. **Job offer processing:**
-   - The AI system in charge of processing job offers shall correctly identify and extract at least 90% of the relevant criteria from the job description in at least 90% of the cases, as deemed by a panel of recruitment experts.
-   - The AI system shall assign weights to the extracted criteria that align with human judgment in at least 85% of the cases, as evaluated by a panel of recruitment experts.
-   - The AI system shall generate clear and understandable descriptions for each extracted criterion, ensuring that at least 95% of the descriptions are deemed comprehensible by human recruiters.
-   - The AI system shall process and return the structured format of a job offer within 5 seconds for 95% of job offers.
-
-2. **Applicant requirement matching:**
-    - The AI system in charge of matching applicants to job requirements shall achieve a mean absolute error of at most 0.5 in predicting the suitability score for individual criteria, as validated against a benchmark dataset with human-assigned scores.
-    - The AI system shall ensure that the suitability scores are consistent and reliable, with a variance of less than 0.5 in repeated evaluations of the same applicant against the same criterion.
-    - The AI system shall process and return the suitability score for an applicant against a single job requirement within 3 seconds for 95% of requests.
