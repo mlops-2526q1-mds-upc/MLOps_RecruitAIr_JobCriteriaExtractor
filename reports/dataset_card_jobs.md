@@ -44,11 +44,6 @@ This dataset is particularly useful for the following applications:
 
 - Natural Language Processing: Experimenting with text-based models in recruitment and career analytics.
 
-### Out-of-Scope Use
-
-<!-- This section addresses misuse, malicious use, and uses that the dataset will not work well for. -->
-
-
 
 ## Dataset Structure
 
