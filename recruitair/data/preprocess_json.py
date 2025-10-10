@@ -38,7 +38,7 @@ def process_file(path: Path) -> Optional[dict]:
     try:
         with path.open("r", encoding="utf-8") as fh:
             obj = json.load(fh)
-    except Exception as e:
+    except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"WARNING: Failed to parse {path}: {e}", file=sys.stderr)
         return None
 
