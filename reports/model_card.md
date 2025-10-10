@@ -11,14 +11,11 @@ The model extracts from a job offer the relevant skills, experiences, and other 
 
 ### Model Description
 
-RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model designed to process job descriptions and extract structured job criteria. It identifies required skills, preferred skills, experience levels, and other relevant attributes. Each extracted criterion is represented with:
- -   A title (e.g., "Python Programming"),
- -   A weight (importance for the role), and
- -   A description (a recruiter-friendly explanation of the requirement).
+RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model designed to process job descriptions and extract structured job criteria. It identifies required skills, preferred skills, experience levels, and other relevant attributes. Each extracted criterion is represented with: a title (e.g., "Python Programming"), a weight (importance for the role), and a description (a recruiter-friendly explanation of the requirement).
 
 - **Developed by:** Alfonso Brown (github: abrownglez (https://github.com/abrowng)), Tania González (github: taaniagonzaalez (https://github.com/taaniagonzaalez)), Virginia Nicosia (github: viiirgi(https://github.com/viiiiirgi)), Marc Parcerisa (github: AimboParce (https://github.com/AimbotParce)), Daniel Reverter (github: danirc2 (https://github.com/danirc2))
-- **Funded by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
-- **Shared by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Funded by :** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Shared by :** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
 - **Model type:** Machine Learning
 - **Language(s) (NLP):** English
 - **License:** apache-2.0
@@ -33,11 +30,14 @@ RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model des
 
 ### Direct Use
 
+<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
+
 -   Extracting structured job criteria from free-text job descriptions.
 -   Preprocessing for automated recruitment pipelines.
 -   Providing recruiters with a clear breakdown of job requirements.
 
-### Downstream Use [optional]
+### Downstream Use 
+<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
 
 -   Feeding structured criteria into RecruitAIr_CriteriaEvaluator to match and rank applicants.
 -   Supporting explainable AI in recruitment by displaying transparent criteria-to-score mappings.
@@ -45,11 +45,15 @@ RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model des
 
 ### Out-of-Scope Use
 
+<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
+
 -   Using the model as a fully automated hiring decision-maker since it is not intended to replace human judgment.
 -   Applying it to non-English job descriptions since the model is currently trained only on English.
 -   Extracting sensitive personal or demographic attributes since the model is not designed for this and could introduce bias.
 
 ## Bias, Risks, and Limitations
+
+<!-- This section is meant to convey both technical and sociotechnical limitations. -->
 
 -   Bias in Job Descriptions: if job postings are written with biased or exclusionary language, the model may replicate these biases in the extracted criteria.
 -   Domain Limitations: performance may degrade in highly specialized domains (e.g., legal, medical, or academic job postings) where terminology differs from standard datasets.
@@ -57,6 +61,8 @@ RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model des
 -   Weight Assignment: while the AI assigns weights, recruiters must review them to ensure they align with human judgment.
 
 ### Recommendations
+
+<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
 
 Users should always review extracted criteria before applying them in candidate evaluations and the recruiters should adjust criterion weights when necessary to reflect actual job priorities and mitigate bias.
 
@@ -72,7 +78,10 @@ Use the code below to get started with the model.
 
 <!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
-{{ training_data | default("[More Information Needed]", true)}}
+Dataset card for job skills: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_jobs.md
+
+Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_recruitment.md
+
 
 ### Training Procedure
 
@@ -161,32 +170,10 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 
 {{ software | default("[More Information Needed]", true)}}
 
-## Citation [optional]
 
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
+## Model Card Authors 
 
-**BibTeX:**
-
-{{ citation_bibtex | default("[More Information Needed]", true)}}
-
-**APA:**
-
-{{ citation_apa | default("[More Information Needed]", true)}}
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-{{ glossary | default("[More Information Needed]", true)}}
-
-## More Information [optional]
-
-{{ more_information | default("[More Information Needed]", true)}}
-
-## Model Card Authors [optional]
-
-{{ model_card_authors | default("[More Information Needed]", true)}}
+Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
 
 ## Model Card Contact
 
-{{ model_card_contact | default("[More Information Needed]", true)}}
