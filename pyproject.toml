@@ -24,10 +24,13 @@ dependencies = [
     "langchain-ollama>=0.3.8",
     "loguru",
     "mlflow[gateway]>=3.4.0",
+    "mypy>=1.18.2",
     "numpy>=2.3.3",
     "pandas>=2.3.2",
     "pip",
     "pydantic>=2.11.9",
+    "pylint>=3.3.8",
+    "pynblint>=0.1.6",
     "python-dotenv",
     "tqdm",
     "typer",
@@ -56,3 +59,6 @@ dev = [
     "pytest>=8.4.2",
 ]
 
+[[tool.mypy.overrides]]
+module = ["sklearn.*", "kagglehub"]
+follow_untyped_imports = true
