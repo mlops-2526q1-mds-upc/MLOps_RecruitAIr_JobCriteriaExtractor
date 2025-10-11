@@ -4,7 +4,7 @@
 card_data: {{card_data}}
 ---
 
-# Dataset Card for Recruitment
+# Dataset Card for Resume score details
 
 <!-- Provide a quick summary of the dataset. -->
 
