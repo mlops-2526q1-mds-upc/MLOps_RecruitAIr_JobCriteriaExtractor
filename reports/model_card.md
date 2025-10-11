@@ -19,6 +19,7 @@ RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model des
 - **Model type:** Machine Learning
 - **Language(s) (NLP):** English
 - **License:** apache-2.0
+- **Finetuned From Model:** dolphin3 (via Ollama)
 
 ### Model Sources
 
@@ -78,9 +79,20 @@ Use the code below to get started with the model.
 
 <!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
+The model was not trained from scratch; it is an instruction-tuned model (dolphin3) applied with structured prompts to extract criteria.
+However, custom datasets were used for prompt engineering and evaluation.
+
+    - Hugging Face: HF_RESUME_SCORE_DETAILS_REPO (custom dataset of resume–criteria scoring pairs)
+
+    - Kaggle: 
+        -batuhanmutlu/job-skill-set (https://www.kaggle.com/datasets/batuhanmutlu/job-skill-set)
+        -surendra365/recruitement-dataset (https://www.kaggle.com/datasets/surendra365/recruitement-dataset)
+
 Dataset card for job skills: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_jobs.md
 
 Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_recruitment.md
+
+Dataset card for resume scores: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_resume-score-details.md
 
 
 ### Training Procedure
@@ -89,12 +101,28 @@ Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_Recr
 
 #### Preprocessing [optional]
 
-{{ preprocessing | default("[More Information Needed]", true)}}
+The preprocessing pipeline includes several modular scripts:
+    -download_raw_dataset.py: downloads raw datasets from Hugging Face and Kaggle and ensures local reproducibility and version consistency through .env configuration.
+    -preprocess_jsons.py: parses and normalizes resume–criteria–score tuples from JSON or structured data sources and generates standardized schema for extraction training and evaluation.
+    -process_dataset.py: cleans and normalizes tabular data (removes duplicates, harmonizes skill labels).-generate_features.py: creates structured features and target mappings for evaluation.
+    -make_plot.py: produces exploratory data analysis (EDA) visualizations and validation plots.
 
+All scripts support logging with loguru and progress tracking via tqdm.
 
 #### Training Hyperparameters
 
-- **Training regime:** {{ training_regime | default("[More Information Needed]", true)}} <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
+- **Training regime:** 
+Fine-tuning: None (prompt-based adaptation)
+
+Precision: fp16
+
+Batch size: 1 (interactive inference)
+
+Max tokens: 2048
+
+Temperature: 0.0 (deterministic extraction)
+
+Framework: LangChain + Ollama API <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
 
 #### Speeds, Sizes, Times [optional]
 
@@ -118,13 +146,15 @@ Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_Recr
 
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
 
-{{ testing_factors | default("[More Information Needed]", true)}}
-
+Evaluated on: job domain (tech, finance, marketing), description length (short, medium, long) and complexity (number of distinct criteria)
 #### Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-{{ testing_metrics | default("[More Information Needed]", true)}}
+Precision@K:	% of extracted criteria that match human-annotated ground truth
+Recall@K:	% of true criteria successfully extracted
+F1-score:	Harmonic mean of precision and recall
+Extraction latency:	Average time per inference (in seconds)
 
 ### Results
 
@@ -132,13 +162,17 @@ Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_Recr
 
 #### Summary
 
-{{ results_summary | default("", true) }}
+The model shows strong performance in general technical job descriptions.
+Slightly reduced accuracy was observed in non-technical or managerial postings.
 
 ## Model Examination [optional]
 
 <!-- Relevant interpretability work for the model goes here -->
 
-{{ model_examination | default("[More Information Needed]", true)}}
+Interpretability achieved through:
+    -Transparent output schema (title, weight, description)
+    -Ability to trace extracted text spans back to original posting
+    -Human-verifiable criterion weights
 
 ## Environmental Impact
 
