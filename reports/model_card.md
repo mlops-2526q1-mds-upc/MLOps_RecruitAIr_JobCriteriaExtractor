@@ -147,9 +147,9 @@ Evaluated on: job domain (tech, finance, marketing), description length (short, 
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-Precision:	% of extracted criteria that match human-annotated ground truth
-Recall:	% of true criteria successfully extracted
-F1-score:	Harmonic mean of precision and recall
+- Precision:	% of extracted criteria that match human-annotated ground truth
+- Recall:	% of true criteria successfully extracted
+- F1-score:	Harmonic mean of precision and recall
 
 ### Results
 
@@ -192,10 +192,13 @@ Developed and executed locally using Python 3.11 and the Ollama runtime.
 GPU: NVIDIA GeForce RTX3060
 
 #### Software
-Python 3.11
-ollama / langchain-ollama
-mlflow-genai
-pandas, loguru, typer, tqdm
+- Python 3.11
+- ollama / langchain-ollama
+- mlflow-genai
+- pandas
+- loguru
+- typer
+- tqdm
 
 
 ## Model Card Authors 
