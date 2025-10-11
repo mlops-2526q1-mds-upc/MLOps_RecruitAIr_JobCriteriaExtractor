@@ -116,14 +116,12 @@ Dataset card for resume scores: https://github.com/mlops-2526q1-mds-upc/MLOps_Re
 3. Normalize into job_description and criteria pairs.
 4. Convert JSONL to tabular CSV for modeling.
 
-#### Training Hyperparameters
-
-- **Training regime:** 
-Training regime: fp32 precision
-Optimizer: Adam
-Loss: Cross-entropy
-Epochs: 10
-Validation split: 0.2 <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
+#### Training Hyperparameters 
+- Training regime: fp32 precision
+- Optimizer: Adam
+- Loss: Cross-entropy
+- Epochs: 10
+- Validation split: 0.2  <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
 
 ## Evaluation
 
