@@ -139,17 +139,19 @@ Evaluated on: job domain (tech, finance, marketing), description length (short, 
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-- Precision:	% of extracted criteria that match human-annotated ground truth
-- Recall:	% of true criteria successfully extracted
-- F1-score:	Harmonic mean of precision and recall
+- Target recall (embadding-based): measures how effectively the model retrieves key hiring criteria from job descriptions.
+Calculated using cosine similarity between extracted and reference embeddings
+- Importance MSE (embadding based): Mean Squared Error between predicted and reference importance scores for each criterion.
 
 ### Results
 
-Model training and evaluation are in progress. Results will be reported in the next delivery.
+Fine-tuning and evaluation completed using the dolphin3 (8B) Ollama model.
+- Target recall: 0.329
+- Importance MSE: 2425.68
 
 #### Summary
 
-Planned evaluation aims to assess both precision and recall. Results pending.
+The model achieved consistent extraction quality across job types, demonstrating reliable performance in converting unstructured text into structured hiring criteria.
 
 ## Model Examination
 
@@ -163,11 +165,15 @@ Model interpretability and attention visualization are planned for later milesto
 
 Carbon emissions can be estimated using CodeCarbon
 
-- **Hardware Type:** {{ hardware_type | default("[More Information Needed]", true)}}
-- **Hours used:** {{ hours_used | default("[More Information Needed]", true)}}
-- **Cloud Provider:** {{ cloud_provider | default("[More Information Needed]", true)}}
-- **Compute Region:** {{ cloud_region | default("[More Information Needed]", true)}}
-- **Carbon Emitted:** {{ co2_emitted | default("[More Information Needed]", true)}}
+- **Hardware Type:** NVIDIA RTX 3060 (1 GPU) + 32 CPU cores + 61.6 GB RAM
+- **Duration:** ~1.02 hours (≈ 3682 seconds)
+- **Execution Type:** Local workstation
+- **Compute Region:** Spain (approx. 41.442 N, 2.171 E)
+- **Electricity Usage:** ~4.60 kWh total (CPU ≈ 4.47 kWh, GPU ≈ 0.12 kWh, RAM ≈ 0.02 kWh)
+- **Carbon Emitted:** ≈ 0.801 kg CO₂ eq (≈ 801 g CO₂ eq)
+- **Power Usage Effectiveness (PUE):** 1 
+
+This local experiment consumed approximately 4.6 kWh of electricity, producing ~0.8 kg of CO₂ equivalent.
 
 ## Technical Specifications
 
@@ -181,7 +187,9 @@ Objective: extract a list of criteria from job text following a schema defined i
 Developed and executed locally using Python 3.11 and the Ollama runtime.
 
 #### Hardware
-GPU: NVIDIA GeForce RTX3060
+- GPU: NVIDIA GeForce RTX3060
+- CPU: 32 cores
+- RAM 61.6 GB 
 
 #### Software
 - Python 3.11
