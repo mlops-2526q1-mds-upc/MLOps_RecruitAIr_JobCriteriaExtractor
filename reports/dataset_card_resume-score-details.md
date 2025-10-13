@@ -108,6 +108,21 @@ Data is created by GPT-4o.
 
 <!-- This section describes the data collection and processing process such as data selection criteria, filtering and normalization methods, tools and libraries used, etc. -->
 
+We take data and we preprocessed as follows: the raw data contained multiple JSON files (match_X.json, mismatch_X.json) with job descriptions and criteria dictionaries.
+
+A preprocessing script consolidated these into a single JSONL file by:
+
+1. Loading and parsing all valid JSON files.
+
+2. Extracting the job_description, macro_dict, and micro_dict fields.
+
+3. Merging both dictionaries into a unified list of {name, importance} pairs.
+
+4. Writing each processed record as one JSON line with the structure:
+
+{"job_description": "...", "criteria": [{"name": "leadership", "importance": 35}, ...]}
+
+Invalid or unreadable files are skipped with warnings. The final output (preprocessed_jobs.jsonl) provides a clean, standardized format ready for training and evaluation.
 
 <!---#### Personal and Sensitive Information>
 
@@ -135,8 +150,4 @@ Data is created by GPT-4o.
 
 Dataset generated using GPT-4o by [rohan/netsol].
 
-## Glossary [optional]
 
-<!-- If relevant, include terms and calculations in this section that can help readers understand the dataset or dataset card. -->
-
-{{ glossary | default("[More Information Needed]", true)}}
