@@ -108,7 +108,7 @@ Data is created by GPT-4o.
 
 <!-- This section describes the data collection and processing process such as data selection criteria, filtering and normalization methods, tools and libraries used, etc. -->
 
-We take data and we preprocessed as follows: the raw data contained multiple JSON files (match_X.json, mismatch_X.json) with job descriptions and criteria dictionaries.
+The raw data contained multiple JSON files (match_X.json, mismatch_X.json) with job descriptions and criteria dictionaries.
 
 A preprocessing script consolidated these into a single JSONL file by:
 
