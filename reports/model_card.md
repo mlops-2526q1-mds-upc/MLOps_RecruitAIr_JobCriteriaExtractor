@@ -139,9 +139,8 @@ Evaluated on: job domain (tech, finance, marketing), description length (short, 
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-- Target recall (embadding-based): measures how effectively the model retrieves key hiring criteria from job descriptions.
-Calculated using cosine similarity between extracted and reference embeddings
-- Importance MSE (embadding based): Mean Squared Error between predicted and reference importance scores for each criterion.
+- Target recall (embadding-based): Measures how effectively the model retrieves target criteria. For each target criterion, we find its highest cosine similarity against all model outputs. The final metric is the average of these scores, with any similarity below 0.8 being treated as 0.
+- Importance MSE (embadding based): Assesses the accuracy of predicted importance scores. Each model output is matched to the closest target criterion (if cosine similarity > 0.5). The metric is the Mean Squared Error (MSE) between predicted and target importances, with a maximum penalty applied for any unmatched outputs.
 
 ### Results
 
@@ -151,7 +150,8 @@ Fine-tuning and evaluation completed using the dolphin3 (8B) Ollama model.
 
 #### Summary
 
-The model achieved consistent extraction quality across job types, demonstrating reliable performance in converting unstructured text into structured hiring criteria.
+The initial evaluation results show the model is in an early developmental stage; while it can extract some criteria, the low recall score indicates it misses a significant number of key requirements. Furthermore, the high importance MSE suggests its ability to accurately score the importance of these criteria is currently not fully reliable.
+
 
 ## Model Examination
 
