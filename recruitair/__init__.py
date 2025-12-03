@@ -1,1 +1,1 @@
-"""The recruitAIr package."""
+"""RecruitAIr Criteria Extractor Module"""
