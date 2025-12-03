@@ -96,67 +96,24 @@ The dataset was compiled from synthetic and publicly available job application d
 
 <!-- This section describes the data collection and processing process such as data selection criteria, filtering and normalization methods, tools and libraries used, etc. -->
 
-#### Who are the source data producers?
+The raw data contained multiple JSON files (match_X.json, mismatch_X.json) with job descriptions and criteria dictionaries.
 
-<!-- This section describes the people or systems who originally created the data. It should also include self-reported demographic or identity information for the source data creators if this information is available. -->
+A preprocessing script consolidated these into a single JSONL file by:
 
+1. Loading and parsing all valid JSON files.
 
-### Annotations [optional]
+2. Extracting the job_description, macro_dict, and micro_dict fields.
 
-<!-- If the dataset contains annotations which are not part of the initial data collection, use this section to describe them. -->
+3. Merging both dictionaries into a unified list of {name, importance} pairs.
 
-#### Annotation process
+4. Writing each processed record as one JSON line with the structure:
 
-<!-- This section describes the annotation process such as annotation tools used in the process, the amount of data annotated, annotation guidelines provided to the annotators, interannotator statistics, annotation validation, etc. -->
+{"job_description": "...", "criteria": [{"name": "leadership", "importance": 35}, ...]}
 
-
-#### Who are the annotators?
-
-<!-- This section describes the people or systems who created the annotations. -->
-
-#### Personal and Sensitive Information
-
-<!-- State whether the dataset contains data that might be considered personal, sensitive, or private (e.g., data that reveals addresses, uniquely identifiable names or aliases, racial or ethnic origins, sexual orientations, religious beliefs, political opinions, financial or health data, etc.). If efforts were made to anonymize the data, describe the anonymization process. -->
+Invalid or unreadable files are skipped with warnings. The final output (preprocessed_jobs.jsonl) provides a clean, standardized format ready for training and evaluation.
 
 
 
-## Bias, Risks, and Limitations
-
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-
-### Recommendations
-
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
 
 
 
-## Citation [optional]
-
-<!-- If there is a paper or blog post introducing the dataset, the APA and Bibtex information for that should go in this section. -->
-
-**BibTeX:**
-
-{{ citation_bibtex | default("[More Information Needed]", true)}}
-
-**APA:**
-
-{{ citation_apa | default("[More Information Needed]", true)}}
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the dataset or dataset card. -->
-
-{{ glossary | default("[More Information Needed]", true)}}
-
-## More Information [optional]
-
-{{ more_information | default("[More Information Needed]", true)}}
-
-## Dataset Card Authors [optional]
-
-{{ dataset_card_authors | default("[More Information Needed]", true)}}
-
-## Dataset Card Contact
-
-{{ dataset_card_contact | default("[More Information Needed]", true)}}

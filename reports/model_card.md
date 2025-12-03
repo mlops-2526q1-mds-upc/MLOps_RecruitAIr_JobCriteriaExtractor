@@ -1,9 +1,3 @@
----
-# For reference on model card metadata, see the spec: https://github.com/huggingface/hub-docs/blob/main/modelcard.md?plain=1
-# Doc / guide: https://huggingface.co/docs/hub/model-cards
-{{ card_data }}
----
-
 # Model Card for RecruitAIr_JobCriteriaExtractor
 The model extracts from a job offer the relevant skills, experiences, and other applicant requirements that recruiters are seeking. It transforms unstructured job descriptions into structured, machine-readable criteria that can be used to assess applicant suitability.
 
@@ -11,17 +5,15 @@ The model extracts from a job offer the relevant skills, experiences, and other 
 
 ### Model Description
 
-RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model designed to process job descriptions and extract structured job criteria. It identifies required skills, preferred skills, experience levels, and other relevant attributes. Each extracted criterion is represented with:
- -   A title (e.g., "Python Programming"),
- -   A weight (importance for the role), and
- -   A description (a recruiter-friendly explanation of the requirement).
+RecruitAIr_JobCriteriaExtractor is an LLM-based system for analyzing job offers and extracting structured hiring criteria. It leverages a local Ollama model (dolphin3) and a versioned MLflow prompt template. The model takes a job description as input and returns a list of key criteria(required skills, preferred skills, experience levels...), each with a title (e.g., "Python Programming"), description (a recruiter-friendly explanation of the requirement), and importance score (importance for the role).
 
 - **Developed by:** Alfonso Brown (github: abrownglez (https://github.com/abrowng)), Tania González (github: taaniagonzaalez (https://github.com/taaniagonzaalez)), Virginia Nicosia (github: viiirgi(https://github.com/viiiiirgi)), Marc Parcerisa (github: AimboParce (https://github.com/AimbotParce)), Daniel Reverter (github: danirc2 (https://github.com/danirc2))
-- **Funded by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
-- **Shared by [optional]:** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
-- **Model type:** Machine Learning
+- **Funded by :** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Shared by :** Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
+- **Model type:** Large language model for information extraction
 - **Language(s) (NLP):** English
-- **License:** apache-2.0
+- **License:** MIT
+- **Finetuned From Model:** dolphin3 (via Ollama)
 
 ### Model Sources
 
@@ -33,30 +25,37 @@ RecruitAIr_JobCriteriaExtractor is a Natural Language Processing (NLP) model des
 
 ### Direct Use
 
--   Extracting structured job criteria from free-text job descriptions.
--   Preprocessing for automated recruitment pipelines.
--   Providing recruiters with a clear breakdown of job requirements.
+<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
+Intended for structured extraction of hiring criteria directly from English job postings. Typical users include HR analytics engineers, talent acquisition researchers, and data scientists building automated resume–job matching systems.
 
-### Downstream Use [optional]
+### Downstream Use 
+<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
 
--   Feeding structured criteria into RecruitAIr_CriteriaEvaluator to match and rank applicants.
--   Supporting explainable AI in recruitment by displaying transparent criteria-to-score mappings.
--   Enabling recruiters to refine weights or edit extracted criteria.
+- Feeding structured criteria into RecruitAIr_CriteriaEvaluator to match and rank applicants.
+- Supporting explainable AI in recruitment by displaying transparent criteria to score mappings.
+- Enabling recruiters to refine weights or edit extracted criteria.
 
 ### Out-of-Scope Use
 
--   Using the model as a fully automated hiring decision-maker since it is not intended to replace human judgment.
--   Applying it to non-English job descriptions since the model is currently trained only on English.
--   Extracting sensitive personal or demographic attributes since the model is not designed for this and could introduce bias.
+<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
+
+- Using the model as a fully automated hiring decision-maker since it is not intended to replace human judgment.
+- Applying it to non-English job descriptions since the model is currently trained only on English.
+- Extracting sensitive personal or demographic attributes since the model is not designed for this and could introduce bias.
+- Not suitable for generating or rewriting job descriptions.
 
 ## Bias, Risks, and Limitations
 
--   Bias in Job Descriptions: if job postings are written with biased or exclusionary language, the model may replicate these biases in the extracted criteria.
+<!-- This section is meant to convey both technical and sociotechnical limitations. -->
+
+- Bias in Job Descriptions: if job postings are written with biased or exclusionary language, the model may replicate these biases in the extracted criteria (e.g., gendered language or cultural preferences).
 -   Domain Limitations: performance may degrade in highly specialized domains (e.g., legal, medical, or academic job postings) where terminology differs from standard datasets.
 -   False Negatives/Positives: the model may miss some relevant criteria (false negatives) or extract irrelevant phrases (false positives).
 -   Weight Assignment: while the AI assigns weights, recruiters must review them to ensure they align with human judgment.
 
 ### Recommendations
+
+<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
 
 Users should always review extracted criteria before applying them in candidate evaluations and the recruiters should adjust criterion weights when necessary to reflect actual job priorities and mitigate bias.
 
@@ -64,34 +63,59 @@ Users should always review extracted criteria before applying them in candidate 
 
 Use the code below to get started with the model.
 
-{{ get_started_code | default("[More Information Needed]", true)}}
+```python
+from recruitair.job_offers.extract_criteria import extract_key_criteria_from_job_offer
 
+job_offer_text = """
+We are seeking a Data Scientist with strong experience in Python, SQL, and machine learning.
+Knowledge of cloud platforms (AWS, GCP, or Azure) and excellent analytical skills are required.
+"""
+
+criteria = extract_key_criteria_from_job_offer(job_offer_text)
+
+for c in criteria.key_criteria:
+    print(f"{c.title} ({c.importance}): {c.description}")
+
+```
 ## Training Details
 
 ### Training Data
 
 <!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
-{{ training_data | default("[More Information Needed]", true)}}
+The model was not trained from scratch; it is an instruction-tuned model (dolphin3) applied with structured prompts to extract criteria.
+However, custom datasets were used for prompt engineering and evaluation.
+
+- Hugging Face: HF_RESUME_SCORE_DETAILS_REPO (custom dataset of resume–criteria scoring pairs) Preprocessing converted multiple JSON sources into a unified JSONL format containing job descriptions and criteria lists.
+
+- Kaggle: 
+     -batuhanmutlu/job-skill-set (https://www.kaggle.com/datasets/batuhanmutlu/job-skill-set)
+     -surendra365/recruitement-dataset (https://www.kaggle.com/datasets/surendra365/recruitement-dataset)
+
+Dataset card for job skills: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_jobs.md
+
+Dataset card for recruitment: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_recruitment.md
+
+Dataset card for resume scores: https://github.com/mlops-2526q1-mds-upc/MLOps_RecruitAIr_JobCriteriaExtractor/blob/main/reports/dataset_card_resume-score-details.md
+
 
 ### Training Procedure
 
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
 
-#### Preprocessing [optional]
+#### Preprocessing 
 
-{{ preprocessing | default("[More Information Needed]", true)}}
+1. Download datasets from Kaggle and Hugging Face.
+2. Parse JSON files (match_X.json, mismatch_X.json).
+3. Normalize into job_description and criteria pairs.
+4. Convert JSONL to tabular CSV for modeling.
 
-
-#### Training Hyperparameters
-
-- **Training regime:** {{ training_regime | default("[More Information Needed]", true)}} <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
-
-#### Speeds, Sizes, Times [optional]
-
-<!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
-
-{{ speeds_sizes_times | default("[More Information Needed]", true)}}
+#### Training Hyperparameters 
+- Training regime: fp32 precision
+- Optimizer: Adam
+- Loss: Cross-entropy
+- Epochs: 10
+- Validation split: 0.2  <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
 
 ## Evaluation
 
@@ -103,90 +127,88 @@ Use the code below to get started with the model.
 
 <!-- This should link to a Dataset Card if possible. -->
 
-{{ testing_data | default("[More Information Needed]", true)}}
+Held-out subset from the processed dataset representing unseen job offers.
 
 #### Factors
 
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
 
-{{ testing_factors | default("[More Information Needed]", true)}}
+Evaluated on: job domain (tech, finance, marketing), description length (short, medium, long) and complexity (number of distinct criteria)
 
 #### Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
-{{ testing_metrics | default("[More Information Needed]", true)}}
+- Target recall (embadding-based): Measures how effectively the model retrieves target criteria. For each target criterion, we find its highest cosine similarity against all model outputs. The final metric is the average of these scores, with any similarity below 0.8 being treated as 0.
+- Importance MSE (embadding based): Assesses the accuracy of predicted importance scores. Each model output is matched to the closest target criterion (if cosine similarity > 0.5). The metric is the Mean Squared Error (MSE) between predicted and target importances, with a maximum penalty applied for any unmatched outputs.
 
 ### Results
 
-{{ results | default("[More Information Needed]", true)}}
+Fine-tuning and evaluation completed using the dolphin3 (8B) Ollama model.
+- Target recall: 0.329
+- Importance MSE: 2425.68
 
 #### Summary
 
-{{ results_summary | default("", true) }}
+The initial evaluation results show the model is in an early developmental stage; while it can extract some criteria, the low recall score indicates it misses a significant number of key requirements. Furthermore, the high importance MSE suggests its ability to accurately score the importance of these criteria is currently not fully reliable.
 
-## Model Examination [optional]
+
+## Model Examination
 
 <!-- Relevant interpretability work for the model goes here -->
 
-{{ model_examination | default("[More Information Needed]", true)}}
+Model interpretability and attention visualization are planned for later milestones to better understand how the model focuses on skill- and experience-related information.
 
 ## Environmental Impact
 
 <!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
 
-Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
+Carbon emissions can be estimated using CodeCarbon
 
-- **Hardware Type:** {{ hardware_type | default("[More Information Needed]", true)}}
-- **Hours used:** {{ hours_used | default("[More Information Needed]", true)}}
-- **Cloud Provider:** {{ cloud_provider | default("[More Information Needed]", true)}}
-- **Compute Region:** {{ cloud_region | default("[More Information Needed]", true)}}
-- **Carbon Emitted:** {{ co2_emitted | default("[More Information Needed]", true)}}
+- **Hardware Type:** NVIDIA RTX 3060 (1 GPU) + 32 CPU cores + 61.6 GB RAM
+- **Duration:** ~1.02 hours (≈ 3682 seconds)
+- **Execution Type:** Local workstation
+- **Compute Region:** Spain (approx. 41.442 N, 2.171 E)
+- **Electricity Usage:** ~4.60 kWh total (CPU ≈ 4.47 kWh, GPU ≈ 0.12 kWh, RAM ≈ 0.02 kWh)
+- **Carbon Emitted:** ≈ 0.801 kg CO₂ eq (≈ 801 g CO₂ eq)
+- **Power Usage Effectiveness (PUE):** 1 
 
-## Technical Specifications [optional]
+This local experiment consumed approximately 4.6 kWh of electricity, producing ~0.8 kg of CO₂ equivalent.
+
+## Technical Specifications
 
 ### Model Architecture and Objective
 
-{{ model_specs | default("[More Information Needed]", true)}}
+A structured-output LLM pipeline using ChatOllama(model="dolphin3").
+Objective: extract a list of criteria from job text following a schema defined in KeyCriteriaResponse.
 
 ### Compute Infrastructure
 
-{{ compute_infrastructure | default("[More Information Needed]", true)}}
+Developed and executed locally using Python 3.11 and the Ollama runtime.
 
 #### Hardware
-
-{{ hardware_requirements | default("[More Information Needed]", true)}}
+- GPU: NVIDIA GeForce RTX3060
+- CPU: 32 cores
+- RAM 61.6 GB 
 
 #### Software
+- Python 3.11
+- ollama / langchain-ollama
+- mlflow-genai
+- pandas
+- loguru
+- typer
+- tqdm
 
-{{ software | default("[More Information Needed]", true)}}
 
-## Citation [optional]
+## Model Card Authors 
 
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
-
-**BibTeX:**
-
-{{ citation_bibtex | default("[More Information Needed]", true)}}
-
-**APA:**
-
-{{ citation_apa | default("[More Information Needed]", true)}}
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-{{ glossary | default("[More Information Needed]", true)}}
-
-## More Information [optional]
-
-{{ more_information | default("[More Information Needed]", true)}}
-
-## Model Card Authors [optional]
-
-{{ model_card_authors | default("[More Information Needed]", true)}}
+Alfonso Brown, Tania González, Virginia Nicosia, Marc Parcerisa, Daniel Reverter
 
 ## Model Card Contact
-
-{{ model_card_contact | default("[More Information Needed]", true)}}
+For any doubt or question you can write to any member of the RecruitAIr team:
+- Alfonso Brown: alfonso.brown@estudiantat.upc.edu
+- Tania González: tania.gonzalez@estudiantat.upc.edu
+- Virginia Nicosia: virginia.nicosia@estudiantat.upc.edu
+- Marc Parcerisa: marc.parcerisa@estudiantat.upc.edu
+- Daniel Reverter: daniel.reverter@estudiantat.upc.edu
