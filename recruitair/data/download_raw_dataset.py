@@ -37,6 +37,9 @@ def download_kaggle_dataset() -> None:
         "job_applicant_dataset.csv",
     )
 
+    # Create the parent dataset if not exists
+    os.makedirs(RAW_DATA_DIR, exist_ok=True)
+
     df_job_skill_set.to_csv(skill_set_file)
     df_recruitment.to_csv(recruitment_file)
 

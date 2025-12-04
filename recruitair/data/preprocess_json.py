@@ -44,6 +44,9 @@ def process_file(path: Path) -> Optional[dict]:
 
     inp = obj.get("input", {})
     job_description = inp.get("job_description", "").strip()
+    if not job_description:
+        print(f"WARNING: No job description found in {path}", file=sys.stderr)
+        return None
 
     macro_dict = inp.get("macro_dict", {}) or {}
     micro_dict = inp.get("micro_dict", {}) or {}
@@ -51,6 +54,10 @@ def process_file(path: Path) -> Optional[dict]:
     criteria = []
     for name, importance in {**macro_dict, **micro_dict}.items():
         criteria.append({"name": name, "importance": importance})
+
+    if not criteria:
+        print(f"WARNING: No criteria found in {path}", file=sys.stderr)
+        return None
 
     return {
         "job_description": job_description,
