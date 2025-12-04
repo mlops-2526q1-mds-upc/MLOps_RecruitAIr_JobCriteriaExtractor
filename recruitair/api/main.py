@@ -40,7 +40,7 @@ def evaluate(request: EvalRequest, model: BaseEvaluatorModel = Depends(get_model
         raise HTTPException(status_code=500, detail="Model prediction failed")
 
     output_criteria = []
-    for criteria in response.criteria:
+    for criteria in response.key_criteria:
         item = EvalResponse.CriteriaItem(
             description=criteria.description,
             importance=criteria.importance / 100,
