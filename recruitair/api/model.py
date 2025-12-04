@@ -42,6 +42,7 @@ class OLlamaEvaluator(BaseEvaluatorModel):
         self._prompt_uri = prompt_uri
         self._prompt = None
         self._llm = None
+        self._load()
 
     def _load(self):
         self._llm = ChatOllama(model=f"{self._model}:{self._version}", temperature=0)
