@@ -46,9 +46,7 @@ def evaluate(request: EvalRequest, model: BaseEvaluatorModel = Depends(get_model
             importance=criteria.importance / 100,
         )
         output_criteria.append(item)
-    return EvalResponse(
-        criteria=output_criteria
-    )
+    return EvalResponse(criteria=output_criteria)
 
 
 @app.get("/health")

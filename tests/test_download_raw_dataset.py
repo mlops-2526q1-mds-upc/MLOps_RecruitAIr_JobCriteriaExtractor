@@ -43,9 +43,7 @@ def test_download_kaggle_dataset(mock_kagglehub: MagicMock, mock_makedirs: Magic
 
 @patch("recruitair.data.download_raw_dataset.shutil.copy")
 @patch("recruitair.data.download_raw_dataset.hf_hub_download")
-def test_download_huggingface_dataset_success(
-    mock_hf_download: MagicMock, mock_shutil_copy: MagicMock, tmp_path: Path
-):
+def test_download_huggingface_dataset_success(mock_hf_download: MagicMock, mock_shutil_copy: MagicMock, tmp_path: Path):
     """
     Test successful download and copy of a single Hugging Face dataset file.
     """
@@ -57,9 +55,7 @@ def test_download_huggingface_dataset_success(
     result = download_huggingface_dataset(repo_id, rel_path, revision, dest_dir)
 
     assert result is True
-    mock_hf_download.assert_called_once_with(
-        repo_id=repo_id, filename=rel_path, repo_type="dataset", revision=revision
-    )
+    mock_hf_download.assert_called_once_with(repo_id=repo_id, filename=rel_path, repo_type="dataset", revision=revision)
     expected_target_path = os.path.join(dest_dir, "file.json")
     mock_shutil_copy.assert_called_once_with(str(dummy_local_path), expected_target_path)
 
@@ -90,9 +86,7 @@ def test_download_huggingface_dataset_download_error(
 
 
 @patch("recruitair.data.download_raw_dataset.hf_hub_download")
-@patch(
-    "recruitair.data.download_raw_dataset.shutil.copy", side_effect=PermissionError("Copy failed")
-)
+@patch("recruitair.data.download_raw_dataset.shutil.copy", side_effect=PermissionError("Copy failed"))
 def test_download_huggingface_dataset_copy_error(
     mock_shutil_copy: MagicMock,
     mock_hf_download: MagicMock,
@@ -133,19 +127,13 @@ def test_download_huggingface_dataset_jsons_success(
     mock_list_files.return_value = ["data/file1.json", "README.md", "data/file2.JSON"]
     mock_download_single.return_value = True
 
-    download_huggingface_dataset_jsons(
-        repo_id=repo_id, raw_data_dir=raw_data_dir, revision=revision
-    )
+    download_huggingface_dataset_jsons(repo_id=repo_id, raw_data_dir=raw_data_dir, revision=revision)
 
     mock_makedirs.assert_called_once_with(dest_dir, exist_ok=True)
     mock_list_files.assert_called_once_with(repo_id, repo_type="dataset", revision=revision)
     expected_calls = [
-        call(
-            repo_id=repo_id, rel_path="data/file1.json", revision=revision, dest_dir=str(dest_dir)
-        ),
-        call(
-            repo_id=repo_id, rel_path="data/file2.JSON", revision=revision, dest_dir=str(dest_dir)
-        ),
+        call(repo_id=repo_id, rel_path="data/file1.json", revision=revision, dest_dir=str(dest_dir)),
+        call(repo_id=repo_id, rel_path="data/file2.JSON", revision=revision, dest_dir=str(dest_dir)),
     ]
     mock_download_single.assert_has_calls(expected_calls, any_order=True)
 
@@ -163,9 +151,7 @@ def test_download_huggingface_dataset_jsons_list_files_error(tmp_path: Path):
 
 
 @patch("recruitair.data.download_raw_dataset.download_huggingface_dataset")
-@patch(
-    "recruitair.data.download_raw_dataset.list_repo_files", return_value=["README.md", "data.csv"]
-)
+@patch("recruitair.data.download_raw_dataset.list_repo_files", return_value=["README.md", "data.csv"])
 def test_download_huggingface_dataset_jsons_no_json_files(
     _,
     mock_download_single: MagicMock,

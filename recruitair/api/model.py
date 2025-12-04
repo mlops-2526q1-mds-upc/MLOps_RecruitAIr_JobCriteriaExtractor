@@ -1,8 +1,8 @@
 import logging
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import mlflow
 from langchain_ollama import ChatOllama
+import mlflow
 
 from recruitair.job_offers.models import KeyCriteriaResponse
 
@@ -36,23 +36,26 @@ class DummyEvaluator(BaseEvaluatorModel):
 
 class OLlamaEvaluator(BaseEvaluatorModel):
 
-    def __init__(self, model: str, version: str, prompt_uri: str):
+    def __init__(self, model: str, version: str, prompt_uri: str, ollama_base_url: Optional[str] = None):
         self._model = model
         self._version = version
         self._prompt_uri = prompt_uri
+        self._ollama_base_url = ollama_base_url
         self._prompt = None
         self._llm = None
         self._load()
 
     def _load(self):
-        self._llm = ChatOllama(model=f"{self._model}:{self._version}", temperature=0)
+        self._llm = ChatOllama(model=f"{self._model}:{self._version}", temperature=0, base_url=self._ollama_base_url)
         self._prompt = mlflow.genai.load_prompt(self._prompt_uri)
 
     def evaluate(self, job_offer: str) -> KeyCriteriaResponse:
         response = self._llm.with_structured_output(
             self._prompt.response_format,
             method="json_schema",
-        ).invoke(
-            self._prompt.format(job_offer_text=job_offer)
-        )
+        ).invoke(self._prompt.format(job_offer_text=job_offer))
         return KeyCriteriaResponse.model_validate(response)
+
+    @property
+    def version(self) -> str:
+        return self._version
