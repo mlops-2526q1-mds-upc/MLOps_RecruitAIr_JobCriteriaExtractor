@@ -9,7 +9,6 @@ services:
       - ollama
     restart: "no"
 
-
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -33,8 +32,34 @@ services:
       - MLFLOW_TRACKING_URI=https://ml-4cb370e118ec407c83eed254868ebce1.ecs.eu-north-1.on.aws/
     depends_on:
       ollama-init:
-        condition: service_completed_successfully 
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - extractor-api
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
     restart: unless-stopped
 
 volumes:
   ollama-data:
+  grafana-data:
