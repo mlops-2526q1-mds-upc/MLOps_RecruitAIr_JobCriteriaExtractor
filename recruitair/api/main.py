@@ -35,13 +35,11 @@ async def lifespan(app: FastAPI):
     yield
 
 
-api_root_path = settings.api_root_path
-
 app = FastAPI(
     title="Job Criteria Extractor API",
     version="v1",
     lifespan=lifespan,
-    root_path=api_root_path,
+    root_path=settings.api_root_path,
 )
 
 app.add_middleware(
