@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     model: str = Field("dolphin3", description="OLlama model name")
     model_version: str = Field("8b", description="OLlama model version")
     ollama_base_url: str | None = Field(None, description="Base URL for OLlama API; override via env")
+    api_root_path: str = Field("", description="API root path; override via env")
 
 
 settings = Settings()

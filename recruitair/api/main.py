@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, generate_latest
 
+from .config import settings
 from .dependencies import get_model
 from .model import BaseEvaluatorModel
 from .monitoring import (
@@ -34,10 +35,13 @@ async def lifespan(app: FastAPI):
     yield
 
 
+api_root_path = settings.api_root_path
+
 app = FastAPI(
     title="Job Criteria Extractor API",
     version="v1",
     lifespan=lifespan,
+    root_path=api_root_path,
 )
 
 app.add_middleware(
