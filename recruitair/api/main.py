@@ -8,16 +8,15 @@ from prometheus_client import CONTENT_TYPE_LATEST, CollectorRegistry, generate_l
 
 from .dependencies import get_model
 from .model import BaseEvaluatorModel
-from .schemas import EvalRequest, EvalResponse
-
-from recruitair.monitoring import (
-    EVAL_REQUESTS_TOTAL,
-    EVAL_REQUESTS_FAILED_TOTAL,
+from .monitoring import (
     EVAL_REQUEST_LATENCY_SECONDS,
-    MODEL_EVALUATION_LATENCY_SECONDS,
+    EVAL_REQUESTS_FAILED_TOTAL,
+    EVAL_REQUESTS_TOTAL,
     MODEL_EVALUATION_ERRORS_TOTAL,
+    MODEL_EVALUATION_LATENCY_SECONDS,
     OFFER_TEXT_LENGTH,
 )
+from .schemas import EvalRequest, EvalResponse
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -79,9 +78,7 @@ def evaluate(
             logger.exception("Model evaluation failed: %s", exc)
             raise
         finally:
-            MODEL_EVALUATION_LATENCY_SECONDS.observe(
-                time.perf_counter() - start_model
-            )
+            MODEL_EVALUATION_LATENCY_SECONDS.observe(time.perf_counter() - start_model)
 
     except Exception:
         # Any error that bubbles up to here is an inference failure

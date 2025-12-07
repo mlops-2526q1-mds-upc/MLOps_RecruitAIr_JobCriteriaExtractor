@@ -1,6 +1,6 @@
 {
-    "title": "RecruitAIr - API Monitoring",
-    "uid": "recruitair-api",
+    "title": "RecruitAIr - Criteria Extractor API",
+    "uid": "recruitair-criteria-extractor-api",
     "schemaVersion": 39,
     "version": 1,
     "panels": [
