@@ -9,8 +9,10 @@ providers:
     orgId: 1
     type: file
     disableDeletion: false
-    updateIntervalSeconds: 10
     allowUiUpdates: false
+    updateIntervalSeconds: 10
     options:
-      path: /var/lib/grafana/dashboards
+      path: /opt/grafana-dashboards
       foldersFromFilesStructure: true
+
+dashboards:
